@@ -88,13 +88,15 @@ class _GiftsPageWidgetState extends State<GiftsPageWidget> {
 class AddGift {
   final String nameOfGift;
   final String description;
-  final bool = false;
+  final bool isShow = false;
+  //final bool = false;
   AddGift({required this.nameOfGift, required this.description});
 
   Future<void> addGift() {
     return myGifts.add({
       'nameOfGift': nameOfGift,
       'description': description,
+      'isShow': isShow,
     });
   }
 }
@@ -195,7 +197,7 @@ class _GiftWidgetState extends State<GiftWidget> {
     );
   }
 
-  Widget gift(Function() removeButton) {
+  Widget gift(Function() removeButton, bool isShow, Function() isShowFunc) {
     return Column(
       children: [
         Container(
@@ -232,12 +234,12 @@ class _GiftWidgetState extends State<GiftWidget> {
         IconButton(
           onPressed: () {
             setState(() {
-              b = !b;
+              isShowFunc();
             });
           },
           icon: Icon(Icons.keyboard_arrow_down_sharp),
         ),
-        if (b) _giftDescription(),
+        if (isShow) _giftDescription(),
       ],
     );
   }
@@ -256,11 +258,21 @@ class _GiftWidgetState extends State<GiftWidget> {
               children: snapshot.data!.docs.map((gifts) {
             Map<String, dynamic> data = gifts.data() as Map<String, dynamic>;
 
-            return gift(() {
-              gifts.reference.delete();
-            });
+            return gift(
+                () {
+                  gifts.reference.delete();
+                },
+                data['isShow'],
+                () {
+                  updata(gifts.id, data['isShow']);
+                });
           }).toList());
         });
+  }
+
+  Future<void> updata(String id, bool isShow) {
+    print(id);
+    return myGifts.doc(id).update({'isShow': !isShow});
   }
 
   @override
