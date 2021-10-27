@@ -1,7 +1,9 @@
 import 'package:avatar_view/avatar_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wish_list/screens/home_page.dart';
 import 'package:wish_list/screens/text_parameters.dart';
 
 class GiftsPageWidget extends StatefulWidget {
@@ -11,6 +13,7 @@ class GiftsPageWidget extends StatefulWidget {
   _GiftsPageWidgetState createState() => _GiftsPageWidgetState();
 }
 
+String str = 'sss';
 CollectionReference myGifts = FirebaseFirestore.instance.collection('gifts');
 bool b = false;
 
@@ -34,23 +37,34 @@ class _GiftsPageWidgetState extends State<GiftsPageWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
-      body: StreamBuilder(
-          stream: myGifts.orderBy('nameOfGift').snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.data == null)
-              return Center(child: CircularProgressIndicator());
-            return ListView(
-                children: snapshot.data!.docs.map((gifts) {
-              Map<String, dynamic> data = gifts.data() as Map<String, dynamic>;
+      body: GiftWidget(),
+      // body: StreamBuilder(
+      //     stream: myGifts.orderBy('nameOfGift').snapshots(),
+      //     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      //       if (snapshot.data == null)
+      //         return Center(child: CircularProgressIndicator());
+      //       return ListView(
+      //           children: snapshot.data!.docs.map((gifts) {
+      //         Map<String, dynamic> data = gifts.data() as Map<String, dynamic>;
 
-              return GiftWidget(
-                nameOfGift: data['nameOfGift'],
-                description: data['description'],
-                //removeButton: () {},
-                // gifts.reference.delete(),
-              );
-            }).toList());
-          }),
+      //         return GiftWidget(
+      //           nameOfGift: data['nameOfGift'],
+      //           description: data['description'],
+      //           //removeButton: () {
+      //           //  print('object');
+      //           //},
+      //           removeButton: () {
+      //             print('ddddqq');
+      //             //myGifts.doc('${gifts.id}').delete();
+      //             //myGifts.doc('$gifts.id').delete();
+      //             //gifts.reference.delete();
+      //             print(gifts.id);
+      //             // myGifts.doc('$gifts').update({gifts.id: FieldValue.delete()});
+      //           },
+      //           id: gifts.id,
+      //         );
+      //       }).toList());
+      //     }),
       // body: SingleChildScrollView(
       //   child: Column(
       //     children: [
@@ -62,7 +76,7 @@ class _GiftsPageWidgetState extends State<GiftsPageWidget> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
-          AddGift(nameOfGift: 'qqq', description: 'sss').addGift();
+          AddGift(nameOfGift: 'wwww', description: 'sss').addGift();
           print('add');
         },
         child: Icon(Icons.add),
@@ -86,33 +100,13 @@ class AddGift {
 }
 
 class GiftWidget extends StatefulWidget {
-  final String nameOfGift;
-  final String description;
-  //final Function removeButton;
-  GiftWidget({
-    required this.nameOfGift,
-    required this.description,
-    //this.removeButton,
-  });
+  const GiftWidget({Key? key}) : super(key: key);
 
   @override
-  _GiftWidgetState createState() => _GiftWidgetState(
-        nameOfGift,
-        description,
-        //removeButton,
-      );
+  _GiftWidgetState createState() => _GiftWidgetState();
 }
 
 class _GiftWidgetState extends State<GiftWidget> {
-  final String nameOfGift;
-  final String description;
-  //final Function removeButton;
-
-  _GiftWidgetState(
-    this.nameOfGift,
-    this.description,
-    //this.removeButton,
-  );
   BoxShadow shadow() {
     return BoxShadow(
       offset: Offset(0, 17),
@@ -153,21 +147,21 @@ class _GiftWidgetState extends State<GiftWidget> {
 
   Widget giftName() {
     return Container(
-      padding: EdgeInsets.all(20),
-      child: Align(
+      padding: const EdgeInsets.all(20),
+      child: const Align(
         alignment: Alignment.center,
         child: TextParameters(
-          text: nameOfGift,
+          text: "nameOfGift",
           fontSize: 30.0,
         ),
       ),
     );
   }
 
-  Widget removeContainer() {
+  Widget removeContainer(Function() buttonRemove) {
     return InkWell(
-      onTap: () {},
-      child: Align(
+      onTap: () => buttonRemove(),
+      child: const Align(
         alignment: Alignment.topRight,
         child: Padding(
           padding: EdgeInsets.all(20),
@@ -188,11 +182,11 @@ class _GiftWidgetState extends State<GiftWidget> {
           borderRadius: BorderRadius.circular(30.0),
           color: Theme.of(context).primaryColor,
         ),
-        child: Center(
+        child: const Center(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: EdgeInsets.all(20.0),
             child: TextParameters(
-              text: description,
+              text: 'description',
               fontSize: 20.0,
             ),
           ),
@@ -201,7 +195,7 @@ class _GiftWidgetState extends State<GiftWidget> {
     );
   }
 
-  Widget gift() {
+  Widget gift(Function() removeButton) {
     return Column(
       children: [
         Container(
@@ -226,7 +220,7 @@ class _GiftWidgetState extends State<GiftWidget> {
                         child: Stack(
                           children: [
                             giftName(),
-                            removeContainer(),
+                            removeContainer(removeButton),
                           ],
                         )),
                   ],
@@ -248,8 +242,29 @@ class _GiftWidgetState extends State<GiftWidget> {
     );
   }
 
+  Widget showGifts() {
+    return StreamBuilder(
+        stream: myGifts.orderBy('nameOfGift').snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.data == null) {
+            return Center(
+                child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ));
+          }
+          return ListView(
+              children: snapshot.data!.docs.map((gifts) {
+            Map<String, dynamic> data = gifts.data() as Map<String, dynamic>;
+
+            return gift(() {
+              gifts.reference.delete();
+            });
+          }).toList());
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return gift();
+    return showGifts();
   }
 }
