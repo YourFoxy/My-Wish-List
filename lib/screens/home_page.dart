@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'package:wish_list/screens/text_parameters.dart';
 import 'package:wish_list/services/auth.dart';
+
+import 'adding_gifts.dart';
 //import 'package:wish_list/services/auth.dart';
 
 class HomePageWidgets extends StatefulWidget {
@@ -415,10 +417,10 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
   Widget _designCategory(String str) {
     return InkWell(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => GiftsPageWidget()),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => GiftsPageWidget()),
+        );
       },
       child: SizedBox(
         height: 180,
