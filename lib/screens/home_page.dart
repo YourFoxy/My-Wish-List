@@ -68,8 +68,10 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text(''),
-          actions: _appBarMenuWidget(Theme.of(context).primaryColor)),
+        title: const Text(''),
+        actions: _appBarMenuWidget(Theme.of(context).primaryColor),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {

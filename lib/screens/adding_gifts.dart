@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:wish_list/screens/home_page.dart';
 import 'package:wish_list/screens/text_parameters.dart';
 
+import 'editing_gift.dart';
+
 class GiftsPageWidget extends StatefulWidget {
   GiftsPageWidget({Key? key}) : super(key: key);
 
@@ -21,6 +23,7 @@ class _GiftsPageWidgetState extends State<GiftsPageWidget> {
   AppBar appBar() {
     return AppBar(
       title: Text(''),
+      backgroundColor: Theme.of(context).primaryColor,
       actions: <Widget>[
         // ignore: deprecated_member_use
         FlatButton(
@@ -76,9 +79,15 @@ class _GiftsPageWidgetState extends State<GiftsPageWidget> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
-          AddGift(nameOfGift: 'wwww', description: 'sss').addGift();
-          print('add');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddGiftWidget()),
+          );
         },
+        //  () {
+        //   AddGift(nameOfGift: 'wwww', description: 'sss').addGift();
+        //   print('add');
+        // },
         child: Icon(Icons.add),
       ),
     );
