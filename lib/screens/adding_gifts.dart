@@ -39,7 +39,18 @@ class _GiftsPageWidgetState extends State<GiftsPageWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePageWidgets()),
+          ),
+        ),
+        title: const Text(''),
+        // actions: _appBarMenuWidget(Theme.of(context).primaryColor),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       body: GiftWidget(),
       // body: StreamBuilder(
       //     stream: myGifts.orderBy('nameOfGift').snapshots(),
@@ -95,13 +106,13 @@ class _GiftsPageWidgetState extends State<GiftsPageWidget> {
 }
 
 class AddGift {
-  final String nameOfGift;
-  final String description;
+  //final String nameOfGift;
+  //final String description;
   final bool isShow = false;
   //final bool = false;
-  AddGift({required this.nameOfGift, required this.description});
+  // AddGift({required this.nameOfGift, required this.description});
 
-  Future<void> addGift() {
+  Future<void> addGift(String nameOfGift, String description) {
     return myGifts.add({
       'nameOfGift': nameOfGift,
       'description': description,
@@ -156,13 +167,13 @@ class _GiftWidgetState extends State<GiftWidget> {
     );
   }
 
-  Widget giftName() {
+  Widget giftName(String name) {
     return Container(
       padding: const EdgeInsets.all(20),
-      child: const Align(
+      child: Align(
         alignment: Alignment.center,
         child: TextParameters(
-          text: "nameOfGift",
+          text: name,
           fontSize: 30.0,
         ),
       ),
@@ -170,22 +181,20 @@ class _GiftWidgetState extends State<GiftWidget> {
   }
 
   Widget removeContainer(Function() buttonRemove) {
-    return InkWell(
-      onTap: () => buttonRemove(),
-      child: const Align(
-        alignment: Alignment.topRight,
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Icon(
-            Icons.close,
-            color: Colors.white,
-          ),
+    return Align(
+      alignment: Alignment.topRight,
+      child: Padding(
+        padding: EdgeInsets.all(5),
+        child: IconButton(
+          icon: Icon(Icons.close),
+          color: Colors.white,
+          onPressed: () => buttonRemove(),
         ),
       ),
     );
   }
 
-  Widget _giftDescription() {
+  Widget _giftDescription(String description) {
     return FractionallySizedBox(
       widthFactor: 0.94,
       child: Container(
@@ -193,11 +202,11 @@ class _GiftWidgetState extends State<GiftWidget> {
           borderRadius: BorderRadius.circular(30.0),
           color: Theme.of(context).primaryColor,
         ),
-        child: const Center(
+        child: Center(
           child: Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(20.0),
             child: TextParameters(
-              text: 'description',
+              text: description,
               fontSize: 20.0,
             ),
           ),
@@ -206,7 +215,8 @@ class _GiftWidgetState extends State<GiftWidget> {
     );
   }
 
-  Widget gift(Function() removeButton, bool isShow, Function() isShowFunc) {
+  Widget gift(Function() removeButton, bool isShow, Function() isShowFunc,
+      String name, String description) {
     return Column(
       children: [
         Container(
@@ -230,7 +240,7 @@ class _GiftWidgetState extends State<GiftWidget> {
                         flex: 1,
                         child: Stack(
                           children: [
-                            giftName(),
+                            giftName(name),
                             removeContainer(removeButton),
                           ],
                         )),
@@ -248,7 +258,7 @@ class _GiftWidgetState extends State<GiftWidget> {
           },
           icon: Icon(Icons.keyboard_arrow_down_sharp),
         ),
-        if (isShow) _giftDescription(),
+        if (isShow) _giftDescription(description),
       ],
     );
   }
@@ -274,7 +284,9 @@ class _GiftWidgetState extends State<GiftWidget> {
                 data['isShow'],
                 () {
                   updata(gifts.id, data['isShow']);
-                });
+                },
+                data['nameOfGift'],
+                data['description']);
           }).toList());
         });
   }

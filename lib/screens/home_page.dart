@@ -68,6 +68,7 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text(''),
         actions: _appBarMenuWidget(Theme.of(context).primaryColor),
         backgroundColor: Theme.of(context).primaryColor,
