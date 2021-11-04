@@ -17,7 +17,9 @@ class HomePageWidgets extends StatefulWidget {
 }
 
 int r = 0;
-CollectionReference myR = FirebaseFirestore.instance.collection('my');
+late String categoryUid;
+//CollectionReference myR =
+// FirebaseFirestore.instance.collection(fAuth.currentUser!.uid);
 
 class _HomePageWidgetsState extends State<HomePageWidgets> {
   List<Widget> _appBarMenuWidget(Color color) {
@@ -180,7 +182,9 @@ class _AddingCategoryWidgetState extends State<AddingCategoryWidget> {
 
   void add() {
     if (_controller.text != '') {
-      myR.add({'myId': _controller.text});
+      FirebaseFirestore.instance
+          .collection(fAuth.currentUser!.uid)
+          .add({'myId': _controller.text});
       _controller.text = '';
       Navigator.pop(context);
     }
@@ -417,9 +421,10 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
     );
   }
 
-  Widget _designCategory(String str) {
+  Widget _designCategory(String str, String id) {
     return InkWell(
       onTap: () {
+        categoryUid = id;
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => GiftsPageWidget()),
@@ -445,7 +450,10 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
 
   Widget _category() {
     return StreamBuilder(
-        stream: myR.orderBy('myId').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection(fAuth.currentUser!.uid)
+            .orderBy('myId')
+            .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           print('ddddddddddddddddddddddddddddddddddddddddddd');
           if (snapshot.data == null) return const CircularProgressIndicator();
@@ -461,7 +469,7 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
                     height: 180,
                     width: 200,
                     child: Stack(children: [
-                      _designCategory(my['myId']),
+                      _designCategory(my['myId'], my.id),
                       _removeCategory(() {
                         my.reference.delete();
                       }),

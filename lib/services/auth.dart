@@ -1,15 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wish_list/domain/current_user_uid.dart';
 import 'package:wish_list/domain/my_user.dart';
 
-class AuthService {
-  final FirebaseAuth _fAuth = FirebaseAuth.instance;
+final FirebaseAuth fAuth = FirebaseAuth.instance;
+late String currentUserUid = '';
 
+class AuthService {
   Future<MyUser?> singInWithEmailAndPassword(
       String email, String password) async {
     try {
-      UserCredential result = await _fAuth.signInWithEmailAndPassword(
+      UserCredential result = await fAuth.signInWithEmailAndPassword(
           email: email, password: password);
-//FirebaseAuth.
+
       User? user = result.user;
       return MyUser.fromFirebase(user!);
     } catch (e) {
@@ -20,7 +23,7 @@ class AuthService {
   Future<MyUser?> registerInWithEmailAndPassword(
       String email, String password) async {
     try {
-      UserCredential result = await _fAuth.createUserWithEmailAndPassword(
+      UserCredential result = await fAuth.createUserWithEmailAndPassword(
           email: email, password: password);
 
       User? user = result.user;
@@ -31,11 +34,11 @@ class AuthService {
   }
 
   Future logOut() async {
-    await _fAuth.signOut();
+    await fAuth.signOut();
   }
 
   Stream<MyUser?> get currentUser {
-    return _fAuth
+    return fAuth
         .authStateChanges()
         .map((User? user) => user != null ? MyUser.fromFirebase(user) : null);
   }

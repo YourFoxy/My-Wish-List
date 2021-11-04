@@ -42,6 +42,8 @@ dependencies:
   fluttertoast: ^8.0.8
   avatar_view: ^1.0.1
   getwidget: ^2.0.4
+  shared_preferences: ^2.0.8
+  shared_preferences_web: ^2.0.2
 
 dev_dependencies:
   flutter_test:

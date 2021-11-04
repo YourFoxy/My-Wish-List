@@ -5,24 +5,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wish_list/screens/home_page.dart';
 import 'package:wish_list/screens/text_parameters.dart';
+import 'package:wish_list/services/auth.dart';
 
 import 'editing_gift.dart';
 
 class GiftsPageWidget extends StatefulWidget {
-  GiftsPageWidget({Key? key}) : super(key: key);
+  const GiftsPageWidget({Key? key}) : super(key: key);
 
   @override
   _GiftsPageWidgetState createState() => _GiftsPageWidgetState();
 }
 
 String str = 'sss';
-CollectionReference myGifts = FirebaseFirestore.instance.collection('gifts');
+//CollectionReference myGifts =
+// FirebaseFirestore.instance.collection('${fAuth.currentUser!.uid} Gifts');
 bool b = false;
 
 class _GiftsPageWidgetState extends State<GiftsPageWidget> {
   AppBar appBar() {
     return AppBar(
-      title: Text(''),
+      title: const Text(''),
       backgroundColor: Theme.of(context).primaryColor,
       actions: <Widget>[
         // ignore: deprecated_member_use
@@ -41,17 +43,17 @@ class _GiftsPageWidgetState extends State<GiftsPageWidget> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HomePageWidgets()),
+            MaterialPageRoute(builder: (context) => const HomePageWidgets()),
           ),
         ),
         title: const Text(''),
         // actions: _appBarMenuWidget(Theme.of(context).primaryColor),
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: GiftWidget(),
+      body: const GiftWidget(),
       // body: StreamBuilder(
       //     stream: myGifts.orderBy('nameOfGift').snapshots(),
       //     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -99,7 +101,7 @@ class _GiftsPageWidgetState extends State<GiftsPageWidget> {
         //   AddGift(nameOfGift: 'wwww', description: 'sss').addGift();
         //   print('add');
         // },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -113,10 +115,13 @@ class AddGift {
   // AddGift({required this.nameOfGift, required this.description});
 
   Future<void> addGift(String nameOfGift, String description) {
-    return myGifts.add({
+    return FirebaseFirestore.instance
+        .collection('${fAuth.currentUser!.uid} Gifts')
+        .add({
       'nameOfGift': nameOfGift,
       'description': description,
       'isShow': isShow,
+      'category uid': categoryUid,
     });
   }
 }
@@ -131,7 +136,7 @@ class GiftWidget extends StatefulWidget {
 class _GiftWidgetState extends State<GiftWidget> {
   BoxShadow shadow() {
     return BoxShadow(
-      offset: Offset(0, 17),
+      offset: const Offset(0, 17),
       blurRadius: 20,
       spreadRadius: -13,
       color: Theme.of(context).primaryColor,
@@ -139,31 +144,28 @@ class _GiftWidgetState extends State<GiftWidget> {
   }
 
   Widget spaceForMedia() {
-    return FractionallySizedBox(
-      heightFactor: 1,
-      child: Container(
-        width: 200,
-        child: AvatarView(
-          radius: 30.0,
-          avatarType: AvatarType.RECTANGLE,
-          imagePath:
-              "https://sun9-11.userapi.com/impg/e3GSKLomqW9aEUnCMPqbeYo7LGY22IhfxwRQVA/rnT3cvaOe18.jpg?size=720x900&quality=96&sign=39226f38b88399db41020b178108ca01&type=album",
-          placeHolder: Container(
-            child: Icon(
-              Icons.circle_outlined,
-              size: 50,
-              color: Colors.white,
-            ),
-          ),
-          errorWidget: Container(
-            child: Icon(
-              Icons.error,
-              size: 50,
-              color: Colors.white,
-            ),
-          ),
+    var container = const SizedBox(
+      width: 200,
+      child: AvatarView(
+        radius: 30.0,
+        avatarType: AvatarType.RECTANGLE,
+        imagePath:
+            "https://sun9-11.userapi.com/impg/e3GSKLomqW9aEUnCMPqbeYo7LGY22IhfxwRQVA/rnT3cvaOe18.jpg?size=720x900&quality=96&sign=39226f38b88399db41020b178108ca01&type=album",
+        placeHolder: Icon(
+          Icons.circle_outlined,
+          size: 50,
+          color: Colors.white,
+        ),
+        errorWidget: Icon(
+          Icons.error,
+          size: 50,
+          color: Colors.white,
         ),
       ),
+    );
+    return FractionallySizedBox(
+      heightFactor: 1,
+      child: container,
     );
   }
 
@@ -184,9 +186,9 @@ class _GiftWidgetState extends State<GiftWidget> {
     return Align(
       alignment: Alignment.topRight,
       child: Padding(
-        padding: EdgeInsets.all(5),
+        padding: const EdgeInsets.all(5),
         child: IconButton(
-          icon: Icon(Icons.close),
+          icon: const Icon(Icons.close),
           color: Colors.white,
           onPressed: () => buttonRemove(),
         ),
@@ -220,7 +222,7 @@ class _GiftWidgetState extends State<GiftWidget> {
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.only(top: 10),
+          margin: const EdgeInsets.only(top: 10),
           width: double.infinity,
           height: 200,
           child: Align(
@@ -256,7 +258,7 @@ class _GiftWidgetState extends State<GiftWidget> {
               isShowFunc();
             });
           },
-          icon: Icon(Icons.keyboard_arrow_down_sharp),
+          icon: const Icon(Icons.keyboard_arrow_down_sharp),
         ),
         if (isShow) _giftDescription(description),
       ],
@@ -265,7 +267,10 @@ class _GiftWidgetState extends State<GiftWidget> {
 
   Widget showGifts() {
     return StreamBuilder(
-        stream: myGifts.orderBy('nameOfGift').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('${fAuth.currentUser!.uid} Gifts')
+            .orderBy('nameOfGift')
+            .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.data == null) {
             return Center(
@@ -276,8 +281,8 @@ class _GiftWidgetState extends State<GiftWidget> {
           return ListView(
               children: snapshot.data!.docs.map((gifts) {
             Map<String, dynamic> data = gifts.data() as Map<String, dynamic>;
-
-            return gift(
+            if (data['category uid'] == categoryUid) {
+              return gift(
                 () {
                   gifts.reference.delete();
                 },
@@ -286,14 +291,33 @@ class _GiftWidgetState extends State<GiftWidget> {
                   updata(gifts.id, data['isShow']);
                 },
                 data['nameOfGift'],
-                data['description']);
+                data['description'],
+              );
+            } else {
+              return SizedBox();
+            }
+            // return gift(
+            //   () {
+            //     gifts.reference.delete();
+            //   },
+            //   data['isShow'],
+            //   () {
+            //     updata(gifts.id, data['isShow']);
+            //   },
+            //   data['nameOfGift'],
+            //   data['description'],
+            // );
           }).toList());
         });
   }
 
   Future<void> updata(String id, bool isShow) {
+    // ignore: avoid_print
     print(id);
-    return myGifts.doc(id).update({'isShow': !isShow});
+    return FirebaseFirestore.instance
+        .collection('${fAuth.currentUser!.uid} Gifts')
+        .doc(id)
+        .update({'isShow': !isShow});
   }
 
   @override
