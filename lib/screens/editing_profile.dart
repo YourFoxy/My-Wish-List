@@ -15,6 +15,8 @@ final TextEditingController userSecondNameController = TextEditingController();
 final TextEditingController userAgeController = TextEditingController();
 final TextEditingController userCityController = TextEditingController();
 
+List dataList = [];
+
 class SetDataProfileWidget extends StatefulWidget {
   SetDataProfileWidget({Key? key}) : super(key: key);
 
@@ -45,6 +47,7 @@ class _SetDataProfileWidgetState extends State<SetDataProfileWidget> {
           ),
           SaveButtonWidget(func: () {
             AddUserInformation.updateUserInformation();
+
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => HomePageWidgets()),
@@ -77,6 +80,15 @@ class _SetDataProfileWidgetState extends State<SetDataProfileWidget> {
 //   }
 // }
 class AddUserInformation {
+  // static Future getData() async {
+  //  DocumentSnapshot variable = await FirebaseFirestore.instance
+  //   .collection('Users')
+  //   .doc(fAuth.currentUser!.uid)
+  //   .collection('profile information')
+  //   .doc('info')
+  //   .get();
+  // }
+
   static Future<void> addUserInformation() {
     return FirebaseFirestore.instance
         .collection('Users')

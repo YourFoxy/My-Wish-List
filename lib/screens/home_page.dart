@@ -313,14 +313,51 @@ class _PersonalInformationState extends State<_PersonalInformation> {
     );
   }
 
-  Widget _userName() {
-    return const Padding(
+  Widget _buildName(BuildContext context) {
+    return FutureBuilder<DocumentSnapshot>(
+        future: FirebaseFirestore.instance
+            .collection('Users')
+            .doc(fAuth.currentUser!.uid)
+            .collection('profile information')
+            .doc('info')
+            .get(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const TextParameters(text: 'Loading...', fontSize: 20.0);
+          }
+          var userDocument = snapshot.data;
+          return _userName('${userDocument?['userFirstNameController']} ' +
+              ' '
+                  '${userDocument?['userSecondNameController']}');
+        });
+  }
+
+  Widget _userName(String str) {
+    return Padding(
       padding: EdgeInsets.all(10.0),
       child: TextParameters(
-        text: 'Anzhelika',
+        text: str,
         fontSize: 40.0,
       ),
     );
+  }
+
+  Widget _buildAgeAndCity(BuildContext context) {
+    return FutureBuilder<DocumentSnapshot>(
+        future: FirebaseFirestore.instance
+            .collection('Users')
+            .doc(fAuth.currentUser!.uid)
+            .collection('profile information')
+            .doc('info')
+            .get(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const TextParameters(text: 'Loading...', fontSize: 20.0);
+          }
+          var userDocument = snapshot.data;
+          return _userInfofmation(userDocument?['userAgeController'],
+              userDocument?['userCityController']);
+        });
   }
 
   Widget _userInfofmation(String age, String city) {
@@ -346,8 +383,10 @@ class _PersonalInformationState extends State<_PersonalInformation> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        _userName(),
-        _userInfofmation(age, city),
+        _buildName(context),
+        // _userName(),
+        //_userInfofmation(age, city),
+        _buildAgeAndCity(context),
         _searchBar(),
         //_userInfofmation(),
       ],
