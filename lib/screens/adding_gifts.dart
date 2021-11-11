@@ -116,12 +116,15 @@ class AddGift {
 
   Future<void> addGift(String nameOfGift, String description) {
     return FirebaseFirestore.instance
-        .collection('${fAuth.currentUser!.uid} Gifts')
+        .collection(fAuth.currentUser!.uid)
+        .doc('data')
+        .collection('Categories')
+        .doc(categoryUid)
+        .collection('Gifts')
         .add({
       'nameOfGift': nameOfGift,
       'description': description,
       'isShow': isShow,
-      'category uid': categoryUid,
     });
   }
 }
@@ -190,7 +193,9 @@ class _GiftWidgetState extends State<GiftWidget> {
         child: IconButton(
           icon: const Icon(Icons.close),
           color: Colors.white,
-          onPressed: () => buttonRemove(),
+          onPressed: () {
+            buttonRemove();
+          },
         ),
       ),
     );
@@ -268,8 +273,11 @@ class _GiftWidgetState extends State<GiftWidget> {
   Widget showGifts() {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection('${fAuth.currentUser!.uid} Gifts')
-            .orderBy('nameOfGift')
+            .collection(fAuth.currentUser!.uid)
+            .doc('data')
+            .collection('Categories')
+            .doc(categoryUid)
+            .collection('Gifts')
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.data == null) {
@@ -281,21 +289,18 @@ class _GiftWidgetState extends State<GiftWidget> {
           return ListView(
               children: snapshot.data!.docs.map((gifts) {
             Map<String, dynamic> data = gifts.data() as Map<String, dynamic>;
-            if (data['category uid'] == categoryUid) {
-              return gift(
-                () {
-                  gifts.reference.delete();
-                },
-                data['isShow'],
-                () {
-                  updata(gifts.id, data['isShow']);
-                },
-                data['nameOfGift'],
-                data['description'],
-              );
-            } else {
-              return SizedBox();
-            }
+
+            return gift(
+              () {
+                gifts.reference.delete();
+              },
+              data['isShow'],
+              () {
+                updata(gifts.id, data['isShow']);
+              },
+              data['nameOfGift'],
+              data['description'],
+            );
             // return gift(
             //   () {
             //     gifts.reference.delete();
@@ -315,7 +320,11 @@ class _GiftWidgetState extends State<GiftWidget> {
     // ignore: avoid_print
     print(id);
     return FirebaseFirestore.instance
-        .collection('${fAuth.currentUser!.uid} Gifts')
+        .collection(fAuth.currentUser!.uid)
+        .doc('data')
+        .collection('Categories')
+        .doc(categoryUid)
+        .collection('Gifts')
         .doc(id)
         .update({'isShow': !isShow});
   }

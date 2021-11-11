@@ -185,6 +185,9 @@ class _GiftInformationWidgetState extends State<GiftInformationWidget> {
         _spaceForMedia(),
         name(),
         description(),
+        const SizedBox(
+          height: 50,
+        )
       ],
     );
   }

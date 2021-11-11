@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:wish_list/screens/editing_profile.dart';
 //import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:wish_list/screens/text_parameters.dart';
@@ -33,10 +34,10 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
         ],
         onSelected: (route) {
           if (route == 'Edit profile') {
-            // Navigator.push(
-            //   context,
-            //  MaterialPageRoute(builder: (context) => EditProfile()),
-            // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SetDataProfileWidget()),
+            );
           } else if (route == 'Exit') {
             AuthService().logOut();
           }
@@ -184,7 +185,9 @@ class _AddingCategoryWidgetState extends State<AddingCategoryWidget> {
     if (_controller.text != '') {
       FirebaseFirestore.instance
           .collection(fAuth.currentUser!.uid)
-          .add({'myId': _controller.text});
+          .doc('data')
+          .collection('Categories')
+          .add({'name of categoty': _controller.text});
       _controller.text = '';
       Navigator.pop(context);
     }
@@ -250,7 +253,6 @@ class _AddingCategoryWidgetState extends State<AddingCategoryWidget> {
       elevation: 16,
       child: _addWindow(),
     );
-    ;
   }
 }
 
@@ -321,18 +323,18 @@ class _PersonalInformationState extends State<_PersonalInformation> {
     );
   }
 
-  Widget _userInfofmation() {
+  Widget _userInfofmation(String age, String city) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           TextParameters(
-            text: 'Age: 21',
+            text: age,
             fontSize: 20.0,
           ),
           TextParameters(
-            text: 'City: Brest',
+            text: city,
             fontSize: 20.0,
           ),
         ],
@@ -340,19 +342,19 @@ class _PersonalInformationState extends State<_PersonalInformation> {
     );
   }
 
-  Widget _userTextInformation() {
+  Widget _userTextInformation(String age, String city) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         _userName(),
-        _userInfofmation(),
+        _userInfofmation(age, city),
         _searchBar(),
         //_userInfofmation(),
       ],
     );
   }
 
-  Widget _blockWithInformation() {
+  Widget _blockWithInformation(String age, String city) {
     return SingleChildScrollView(
       child: Stack(
         children: <Widget>[
@@ -364,7 +366,7 @@ class _PersonalInformationState extends State<_PersonalInformation> {
             ),
             child: Stack(
               children: <Widget>[
-                _userTextInformation(),
+                _userTextInformation(age, city),
                 _userPicture(),
               ],
             ),
@@ -374,12 +376,36 @@ class _PersonalInformationState extends State<_PersonalInformation> {
     );
   }
 
+  // Widget _blockWithInformation2() {
+  //   return FutureBuilder(
+  //       future: futureSearchResults, builder: (context, dataSnapshot) {
+  //         if(!dataSnapshot.hasData){
+  //           return circularProgress();
+  //         }
+
+  //         //This part is also not working properly
+  //         List<UserResult> searchUserResult = [];
+  //         dataSnapshot.data.docs.forEach((document){
+  //           Users users = Users.fromDocument(document);
+  //           UserResult userResult = UserResult(users);
+  //           searchUserResult.add(userResult);
+  //         });
+  //         return ListView(children: searchUserResult,);
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
-    return _blockWithInformation();
+    return _blockWithInformation('df', 'dff');
   }
 }
+// class GetUserInformation {
 
+//   Future<void> addGift() {
+//     String name = FirebaseFirestore.instance
+//             .collection('${fAuth.currentUser!.uid} Profile information').doc('dd').get('dd').toString();
+//   }
+// }
 class CategoryWidget2 extends StatefulWidget {
   const CategoryWidget2({Key? key}) : super(key: key);
 
@@ -410,7 +436,24 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
           heightFactor: .2,
           widthFactor: .2,
           child: InkWell(
-            onTap: () => buttonRemove(),
+            onTap: () {
+              buttonRemove();
+              FirebaseFirestore.instance
+                  .collection(fAuth.currentUser!.uid)
+                  .doc('data')
+                  .collection('Categories')
+                  .doc(categoryUid)
+                  .delete();
+              // FirebaseFirestore.instance
+              //     .collection('${fAuth.currentUser!.uid} Gifts')
+              //     .get()
+              //     .then((querySnapshot) {
+              //   querySnapshot.docs.forEach((document) {
+              //     FirebaseFirestore.instance.batch().delete(document.reference);
+              //   });
+              //   return FirebaseFirestore.instance.batch().commit();
+              // });
+            },
             child: const Icon(
               Icons.disabled_by_default_outlined,
               color: Colors.white,
@@ -452,7 +495,9 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection(fAuth.currentUser!.uid)
-            .orderBy('myId')
+            .doc('data')
+            .collection('Categories')
+            .orderBy('name of categoty')
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           print('ddddddddddddddddddddddddddddddddddddddddddd');
@@ -469,7 +514,7 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
                     height: 180,
                     width: 200,
                     child: Stack(children: [
-                      _designCategory(my['myId'], my.id),
+                      _designCategory(my['name of categoty'], my.id),
                       _removeCategory(() {
                         my.reference.delete();
                       }),

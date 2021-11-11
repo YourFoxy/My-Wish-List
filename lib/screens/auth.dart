@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wish_list/domain/my_user.dart';
+import 'package:wish_list/screens/adding_gifts.dart';
+import 'package:wish_list/screens/data_filling.dart';
+import 'package:wish_list/screens/editing_profile.dart';
 import 'package:wish_list/services/auth.dart';
 
 class AuthorizationPage extends StatefulWidget {
@@ -10,32 +13,33 @@ class AuthorizationPage extends StatefulWidget {
   _AuthorizationPageState createState() => _AuthorizationPageState();
 }
 
+bool showLogin = true;
+
 class _AuthorizationPageState extends State<AuthorizationPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   late String _email;
   late String _password;
-  bool showLogin = true;
 
   final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
     AssetImage assetImage = const AssetImage('images/foxy%.png');
-    //Image foxy = Image(image: assetImage);
+    Image foxy = Image(image: assetImage);
 
-    // Widget _logo() {
-    //   return Padding(
-    //     padding: const EdgeInsets.only(top: 150),
-    //     child: Align(
-    //       child: SizedBox(
-    //         child: foxy,
-    //         height: 100,
-    //       ),
-    //     ),
-    //   );
-    // }
+    Widget _logo() {
+      return Padding(
+        padding: const EdgeInsets.only(top: 150),
+        child: Align(
+          child: SizedBox(
+            child: foxy,
+            height: 100,
+          ),
+        ),
+      );
+    }
 
     Widget _input(Icon icon, String hint, TextEditingController controller,
         bool obscure) {
@@ -99,7 +103,55 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
       //onPressed: onPressed)
     }
 
-    Widget _form(String label, Function() func) {
+    Widget _formRegister(String label, Function() func) {
+      return Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20, top: 10),
+            child: _input(
+                const Icon(Icons.email), 'EMAIL', _emailController, false),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: _input(
+                const Icon(Icons.lock), 'PASSWORD', _passwordController, true),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: _input(const Icon(Icons.person), 'FIRST NAME',
+                userFirstNameController, false),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: _input(const Icon(Icons.person_outline), 'SECOND NAME',
+                userSecondNameController, false),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: _input(const Icon(Icons.location_city), 'CITY',
+                userCityController, false),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: _input(const Icon(Icons.assignment_ind_sharp), 'AGE',
+                userAgeController, false),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 20, left: 20),
+            child: SizedBox(
+              height: 50,
+              width: MediaQuery.of(context).size.width,
+              child: _button(label, func),
+            ),
+          ),
+        ],
+      );
+    }
+
+    Widget _formLog(String label, Function() func) {
       return Column(
         children: <Widget>[
           Padding(
@@ -168,8 +220,14 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             textColor: Colors.white,
             fontSize: 16.0);
       } else {
+        AddUserInformation.addUserInformation();
+
         _emailController.clear();
         _passwordController.clear();
+        userFirstNameController.clear();
+        userSecondNameController.clear();
+        userAgeController.clear();
+        userCityController.clear();
       }
     }
 
@@ -178,11 +236,11 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            //_logo(),
+            _logo(),
             (showLogin
                 ? Column(
                     children: <Widget>[
-                      _form('Login', _loginButtonAction),
+                      _formLog('Login', _loginButtonAction),
                       Padding(
                         padding: const EdgeInsets.all(10),
                         child: GestureDetector(
@@ -201,7 +259,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                   )
                 : Column(
                     children: <Widget>[
-                      _form('REGISTER', _registerButtonAction),
+                      _formRegister('REGISTER', _registerButtonAction),
                       Padding(
                         padding: const EdgeInsets.all(10),
                         child: GestureDetector(
@@ -212,6 +270,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                           onTap: () {
                             setState(() {
                               showLogin = true;
+                              // showLogin = false;
                             });
                           },
                         ),
