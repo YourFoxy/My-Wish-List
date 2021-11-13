@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:wish_list/screens/auth.dart';
 import 'package:wish_list/screens/editing_profile.dart';
 //import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -39,7 +40,11 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
               MaterialPageRoute(builder: (context) => SetDataProfileWidget()),
             );
           } else if (route == 'Exit') {
-            AuthService().logOut();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const AuthorizationPage()),
+            );
           }
         },
       ),
@@ -109,7 +114,6 @@ class AddingCategory {
   // });
 
   void add(BuildContext context) {
-    print('d');
     showDialog(
         barrierColor: Colors.black54,
         context: context,
@@ -326,18 +330,18 @@ class _PersonalInformationState extends State<_PersonalInformation> {
             return const TextParameters(text: 'Loading...', fontSize: 20.0);
           }
           var userDocument = snapshot.data;
-          return _userName('${userDocument?['userFirstNameController']} ' +
+          return _userName('${userDocument?['userFirstNameController']} '
               ' '
-                  '${userDocument?['userSecondNameController']}');
+              '${userDocument?['userSecondNameController']}');
         });
   }
 
   Widget _userName(String str) {
     return Padding(
-      padding: EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10.0),
       child: TextParameters(
         text: str,
-        fontSize: 40.0,
+        fontSize: 30.0,
       ),
     );
   }
@@ -477,12 +481,13 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
           child: InkWell(
             onTap: () {
               buttonRemove();
-              FirebaseFirestore.instance
-                  .collection(fAuth.currentUser!.uid)
-                  .doc('data')
-                  .collection('Categories')
-                  .doc(categoryUid)
-                  .delete();
+              // FirebaseFirestore.instance
+              //     .collection(fAuth.currentUser!.uid)
+              //     .doc('data')
+              //     .collection('Categories')
+              //     .doc(categoryUid)
+              //     .delete();
+
               // FirebaseFirestore.instance
               //     .collection('${fAuth.currentUser!.uid} Gifts')
               //     .get()
@@ -509,7 +514,7 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
         categoryUid = id;
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => GiftsPageWidget()),
+          MaterialPageRoute(builder: (context) => const GiftsPageWidget()),
         );
       },
       child: SizedBox(
