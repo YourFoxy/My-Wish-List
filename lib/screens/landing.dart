@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wish_list/domain/my_user.dart';
 import 'package:wish_list/screens/auth.dart';
-import 'package:wish_list/screens/q.dart';
+
+import 'package:wish_list/screens/r.dart';
 
 //mport 'package:wish_list/screens2/auth.dart';
 

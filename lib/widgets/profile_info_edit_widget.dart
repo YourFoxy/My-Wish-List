@@ -1,6 +1,9 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:wish_list/screens/editing_profile.dart';
+import 'dart:io';
 
 class ProfileInfoEditWidget extends StatefulWidget {
   const ProfileInfoEditWidget({Key? key}) : super(key: key);
@@ -11,10 +14,20 @@ class ProfileInfoEditWidget extends StatefulWidget {
 
 class _ProfileInfoEditWidgetState extends State<ProfileInfoEditWidget> {
   Widget _spaceForMedia() {
-    return Container(
-      width: double.infinity,
-      height: 300,
-      color: Theme.of(context).primaryColor,
+    return InkWell(
+      onTap: () async {
+        print('object');
+        var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+        File file = File(image!.path);
+        var storage = FirebaseStorage.instance;
+        TaskSnapshot snapshot =
+            await storage.ref().child("images/k").putFile(file);
+      },
+      child: Container(
+        width: double.infinity,
+        height: 300,
+        color: Theme.of(context).primaryColor,
+      ),
     );
   }
 
