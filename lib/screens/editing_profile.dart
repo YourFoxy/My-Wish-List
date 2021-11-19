@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wish_list/screens/adding_gifts.dart';
@@ -16,6 +17,8 @@ final TextEditingController userAgeController = TextEditingController();
 final TextEditingController userCityController = TextEditingController();
 
 List dataList = [];
+//late Image media = Image(image: NetworkImage(''));
+late String imageUrl = '';
 
 class SetDataProfileWidget extends StatefulWidget {
   SetDataProfileWidget({Key? key}) : super(key: key);
@@ -45,9 +48,18 @@ class _SetDataProfileWidgetState extends State<SetDataProfileWidget> {
           const SingleChildScrollView(
             child: ProfileInfoEditWidget(),
           ),
-          SaveButtonWidget(func: () {
-            AddUserInformation.updateUserInformation();
+          SaveButtonWidget(func: () async {
+            file != null
+                ? await FirebaseStorage.instance
+                    .ref()
+                    .child("images/k")
+                    .putFile(file!)
+                : null;
+            var str =
+                await FirebaseStorage.instance.ref("images/k").getDownloadURL();
 
+            AddUserInformation.updateUserInformation(str);
+            file = null;
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => HomePageWidgets()),
@@ -99,11 +111,13 @@ class AddUserInformation {
       'userFirstNameController': userFirstNameController.text,
       'userSecondNameController': userSecondNameController.text,
       'userAgeController': userAgeController.text,
-      'userCityController': userCityController.text
+      'userCityController': userCityController.text,
+      'userImageUrl':
+          'https://sun9-11.userapi.com/impg/e3GSKLomqW9aEUnCMPqbeYo7LGY22IhfxwRQVA/rnT3cvaOe18.jpg?size=720x900&quality=96&sign=39226f38b88399db41020b178108ca01&type=album',
     });
   }
 
-  static Future<void> updateUserInformation() {
+  static Future<void> updateUserInformation(String str) async {
     return FirebaseFirestore.instance
         .collection('Users')
         .doc(fAuth.currentUser!.uid)
@@ -113,7 +127,8 @@ class AddUserInformation {
       'userFirstNameController': userFirstNameController.text,
       'userSecondNameController': userSecondNameController.text,
       'userAgeController': userAgeController.text,
-      'userCityController': userCityController.text
+      'userCityController': userCityController.text,
+      'userImageUrl': str,
     });
   }
 }

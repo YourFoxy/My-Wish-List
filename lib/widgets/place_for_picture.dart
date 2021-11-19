@@ -1,0 +1,74 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:wish_list/screens/text_parameters.dart';
+import 'package:wish_list/services/auth.dart';
+
+class PlaceForPictureWidget extends StatefulWidget {
+  PlaceForPictureWidget({Key? key}) : super(key: key);
+
+  @override
+  _PlaceForPictureWidgetState createState() => _PlaceForPictureWidgetState();
+}
+
+File? file;
+
+class _PlaceForPictureWidgetState extends State<PlaceForPictureWidget> {
+  File? image;
+  Widget _picture() {
+    return Container(
+      height: 300,
+      width: double.infinity,
+      color: Theme.of(context).primaryColor,
+      child: InkWell(
+        onTap: () async {
+          var image =
+              await ImagePicker().pickImage(source: ImageSource.gallery);
+          if (image == null) return;
+          file = File(image.path);
+
+          setState(() {
+            this.image = file;
+          });
+        },
+        child: image != null
+            ? Image.file(
+                image!,
+                width: double.infinity,
+                height: 300,
+                fit: BoxFit.cover,
+              )
+            : _buildImage(context),
+      ),
+    );
+  }
+
+  Widget _buildImage(BuildContext context) {
+    return FutureBuilder<DocumentSnapshot>(
+        future: FirebaseFirestore.instance
+            .collection('Users')
+            .doc(fAuth.currentUser!.uid)
+            .collection('profile information')
+            .doc('info')
+            .get(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const TextParameters(text: '', fontSize: 20.0);
+          }
+          var userDocument = snapshot.data;
+
+          return Image(
+              image: NetworkImage(userDocument?['userImageUrl']),
+              height: 300,
+              width: double.infinity,
+              fit: BoxFit.cover);
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _picture();
+  }
+}

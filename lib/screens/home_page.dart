@@ -268,17 +268,17 @@ class _PersonalInformation extends StatefulWidget {
 }
 
 class _PersonalInformationState extends State<_PersonalInformation> {
-  Widget _userPicture() {
+  Widget _userPicture(String url) {
+    //print('HJGUYGFYTDRTRDYFVJHGIU $url');
     return Align(
       alignment: Alignment.topRight,
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.only(top: 50, left: 10),
         child: FractionallySizedBox(
           child: CircleAvatar(
             //minRadius: 20,
             radius: 70,
-            backgroundImage: const NetworkImage(
-                "https://sun9-11.userapi.com/impg/e3GSKLomqW9aEUnCMPqbeYo7LGY22IhfxwRQVA/rnT3cvaOe18.jpg?size=720x900&quality=96&sign=39226f38b88399db41020b178108ca01&type=album"),
+            backgroundImage: NetworkImage(url),
             backgroundColor: Theme.of(context).primaryColor,
           ),
         ),
@@ -317,6 +317,24 @@ class _PersonalInformationState extends State<_PersonalInformation> {
     );
   }
 
+  Widget _buildImage(BuildContext context) {
+    return FutureBuilder<DocumentSnapshot>(
+        future: FirebaseFirestore.instance
+            .collection('Users')
+            .doc(fAuth.currentUser!.uid)
+            .collection('profile information')
+            .doc('info')
+            .get(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const TextParameters(text: '', fontSize: 20.0);
+          }
+          var userDocument = snapshot.data;
+          print('UUUUUUUUUUUUUUUUU 2 ${userDocument?['userImageUrl']}');
+          return _userPicture(userDocument?['userImageUrl']);
+        });
+  }
+
   Widget _buildName(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
         future: FirebaseFirestore.instance
@@ -327,7 +345,7 @@ class _PersonalInformationState extends State<_PersonalInformation> {
             .get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return const TextParameters(text: 'Loading...', fontSize: 20.0);
+            return const TextParameters(text: '', fontSize: 20.0);
           }
           var userDocument = snapshot.data;
           return _userName('${userDocument?['userFirstNameController']} '
@@ -356,7 +374,7 @@ class _PersonalInformationState extends State<_PersonalInformation> {
             .get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return const TextParameters(text: 'Loading...', fontSize: 20.0);
+            return const TextParameters(text: '', fontSize: 20.0);
           }
           var userDocument = snapshot.data;
           return _userInfofmation(userDocument?['userAgeController'],
@@ -383,7 +401,7 @@ class _PersonalInformationState extends State<_PersonalInformation> {
     );
   }
 
-  Widget _userTextInformation(String age, String city) {
+  Widget _userTextInformation() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -409,8 +427,8 @@ class _PersonalInformationState extends State<_PersonalInformation> {
             ),
             child: Stack(
               children: <Widget>[
-                _userTextInformation(age, city),
-                _userPicture(),
+                _userTextInformation(),
+                _buildImage(context),
               ],
             ),
           ),
@@ -544,7 +562,6 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
             .orderBy('name of categoty')
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          print('ddddddddddddddddddddddddddddddddddddddddddd');
           if (snapshot.data == null) return const CircularProgressIndicator();
           return Expanded(
             child: Padding(

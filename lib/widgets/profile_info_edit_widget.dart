@@ -1,9 +1,15 @@
+import 'package:avatar_view/avatar_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wish_list/screens/editing_profile.dart';
+import 'package:wish_list/screens/text_parameters.dart';
 import 'dart:io';
+
+import 'package:wish_list/services/auth.dart';
+import 'package:wish_list/widgets/place_for_picture.dart';
 
 class ProfileInfoEditWidget extends StatefulWidget {
   const ProfileInfoEditWidget({Key? key}) : super(key: key);
@@ -12,23 +18,61 @@ class ProfileInfoEditWidget extends StatefulWidget {
   _ProfileInfoEditWidgetState createState() => _ProfileInfoEditWidgetState();
 }
 
+File? file;
+
 class _ProfileInfoEditWidgetState extends State<ProfileInfoEditWidget> {
+  File? image;
+  String? imageURL;
   Widget _spaceForMedia() {
-    return InkWell(
-      onTap: () async {
-        print('object');
-        var image = await ImagePicker().pickImage(source: ImageSource.gallery);
-        File file = File(image!.path);
-        var storage = FirebaseStorage.instance;
-        TaskSnapshot snapshot =
-            await storage.ref().child("images/k").putFile(file);
-      },
-      child: Container(
-        width: double.infinity,
-        height: 300,
-        color: Theme.of(context).primaryColor,
+    return Container(
+      height: 300,
+      width: double.infinity,
+      color: Theme.of(context).primaryColor,
+      child: InkWell(
+        onTap: () async {
+          var image =
+              await ImagePicker().pickImage(source: ImageSource.gallery);
+          if (image == null) return;
+          file = File(image.path);
+          print('FILE ${image.path}');
+
+          setState(() {
+            this.image = file;
+            imageURL = image.path;
+          });
+        },
+        child: image != null
+            ? Image.file(
+                image!,
+                width: double.infinity,
+                height: 300,
+                fit: BoxFit.cover,
+              )
+            : _buildImage(context),
       ),
     );
+  }
+
+  Widget _buildImage(BuildContext context) {
+    return FutureBuilder<DocumentSnapshot>(
+        future: FirebaseFirestore.instance
+            .collection('Users')
+            .doc(fAuth.currentUser!.uid)
+            .collection('profile information')
+            .doc('info')
+            .get(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const TextParameters(text: '', fontSize: 20.0);
+          }
+          var userDocument = snapshot.data;
+
+          return Image(
+              image: NetworkImage(userDocument?['userImageUrl']),
+              height: 300,
+              width: double.infinity,
+              fit: BoxFit.cover);
+        });
   }
 
   Widget cont(String str, TextInputType textInputType,
@@ -36,14 +80,12 @@ class _ProfileInfoEditWidgetState extends State<ProfileInfoEditWidget> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
       child: TextField(
-        //if(number) =>  keyboardType: TextInputType.number,
         keyboardType: textInputType,
         controller: _controller,
         maxLength: 20,
         cursorColor: Theme.of(context).primaryColor,
         style: GoogleFonts.crimsonText(
           color: Theme.of(context).primaryColor,
-          //textStyle: Theme.of(context).textTheme.headline4,
           fontSize: 25.0,
           fontWeight: FontWeight.w700,
         ),
@@ -53,7 +95,6 @@ class _ProfileInfoEditWidgetState extends State<ProfileInfoEditWidget> {
             fontSize: 25.0,
             color: Theme.of(context).primaryColor,
           ),
-          //fillColor: Colors.amber,
           labelText: str,
           enabledBorder: OutlineInputBorder(
             borderRadius: const BorderRadius.all(
@@ -82,7 +123,7 @@ class _ProfileInfoEditWidgetState extends State<ProfileInfoEditWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _spaceForMedia(),
+        PlaceForPictureWidget(),
         cont('first name', TextInputType.name, userFirstNameController),
         cont('second name', TextInputType.name, userSecondNameController),
         cont('age', TextInputType.number, userAgeController),
