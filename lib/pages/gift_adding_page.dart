@@ -21,14 +21,16 @@ class AddGiftWidget extends StatelessWidget {
         _descriptionController.text != '') {
       await FirebaseStorage.instance
           .ref()
-          .child("user/r/${fAuth.currentUser!.uid}")
+          .child("user/r/${imageProfileFile!.hashCode}")
           .putFile(imageProfileFile!);
 
       var imageUrl = await FirebaseStorage.instance
-          .ref("user/r/${fAuth.currentUser!.uid}")
+          .ref("user/r/${imageProfileFile!.hashCode}")
           .getDownloadURL();
       AddGift()
           .addGift(_nameController.text, _descriptionController.text, imageUrl);
+      imageProfileFile = null;
+
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => GiftsPageWidget()),

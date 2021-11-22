@@ -12,8 +12,7 @@ class AddGift {
         .collection('Categories')
         .doc(categoryUid)
         .collection('Gifts')
-        .doc('gift')
-        .set({
+        .add({
       'nameOfGift': nameOfGift,
       'description': description,
       'isShow': isShow,

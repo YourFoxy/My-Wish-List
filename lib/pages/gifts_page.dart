@@ -1,5 +1,6 @@
 import 'package:avatar_view/avatar_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wish_list/pages/home_page.dart';
@@ -87,24 +88,24 @@ class _GiftWidgetState extends State<GiftWidget> {
     );
   }
 
-  Widget _buildImage(BuildContext context) {
-    return FutureBuilder<DocumentSnapshot>(
-        future: FirebaseFirestore.instance
-            .collection(fAuth.currentUser!.uid)
-            .doc('data')
-            .collection('Categories')
-            .doc(categoryUid)
-            .collection('Gifts')
-            .doc('gift')
-            .get(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const TextParameters(text: '', fontSize: 20.0);
-          }
-          var userDocument = snapshot.data;
-          return _spaceForMedia(userDocument?['imageUrl']);
-        });
-  }
+  // Widget _buildImage(BuildContext context) {
+  //   return FutureBuilder<DocumentSnapshot>(
+  //       future: FirebaseFirestore.instance
+  //           .collection(fAuth.currentUser!.uid)
+  //           .doc('data')
+  //           .collection('Categories')
+  //           .doc(categoryUid)
+  //           .collection('Gifts')
+  //           .doc('gift')
+  //           .get(),
+  //       builder: (context, snapshot) {
+  //         if (!snapshot.hasData) {
+  //           return const TextParameters(text: '', fontSize: 20.0);
+  //         }
+  //         var userDocument = snapshot.data;
+  //         return _spaceForMedia(userDocument?['imageUrl']);
+  //       });
+  // }
 
   Widget _spaceForMedia(String imageUrl) {
     var container = SizedBox(
@@ -182,7 +183,7 @@ class _GiftWidgetState extends State<GiftWidget> {
   }
 
   Widget gift(Function() removeButton, bool isShow, Function() isShowFunc,
-      String name, String description) {
+      String name, String description, String imageUrl) {
     return Column(
       children: [
         Container(
@@ -201,7 +202,7 @@ class _GiftWidgetState extends State<GiftWidget> {
                 ),
                 child: Row(
                   children: <Widget>[
-                    Flexible(flex: 1, child: _buildImage(context)),
+                    Flexible(flex: 1, child: _spaceForMedia(imageUrl)),
                     Flexible(
                         flex: 1,
                         child: Stack(
@@ -251,6 +252,7 @@ class _GiftWidgetState extends State<GiftWidget> {
 
             return gift(
               () {
+                // FirebaseStorage.instance.ref(data['imageUrl']).delete();
                 gifts.reference.delete();
               },
               data['isShow'],
@@ -259,6 +261,7 @@ class _GiftWidgetState extends State<GiftWidget> {
               },
               data['nameOfGift'],
               data['description'],
+              data['imageUrl'],
             );
           }).toList());
         });
