@@ -1,18 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
-import 'package:wish_list/screens/auth.dart';
-import 'package:wish_list/screens/editing_profile.dart';
-//import 'package:flutter_slidable/flutter_slidable.dart';
-
-import 'package:wish_list/screens/text_parameters.dart';
+import 'package:wish_list/pages/auth.dart';
+import 'package:wish_list/pages/profile_edit_page.dart';
+import 'package:wish_list/pages/text_parameters.dart';
 import 'package:wish_list/services/auth.dart';
 
-import 'adding_gifts.dart';
+import 'gifts_page.dart';
 //import 'package:wish_list/services/auth.dart';
 
 class HomePageWidgets extends StatefulWidget {
-  const HomePageWidgets({Key? key}) : super(key: key);
+  HomePageWidgets({Key? key}) : super(key: key);
 
   @override
   _HomePageWidgetsState createState() => _HomePageWidgetsState();

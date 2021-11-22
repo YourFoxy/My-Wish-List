@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wish_list/screens/home_page.dart';
-import 'package:wish_list/screens/text_parameters.dart';
+import 'package:wish_list/pages/text_parameters.dart';
 
 class SaveButtonWidget extends StatelessWidget {
   final Function func;

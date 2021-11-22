@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wish_list/domain/my_user.dart';
-import 'package:wish_list/screens/auth.dart';
-import 'package:wish_list/screens/landing.dart';
 import 'package:firebase_core/firebase_core.dart';
 //import 'package:wish_list/services/auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:wish_list/pages/landing.dart';
 import 'package:wish_list/services/auth.dart';
 
 import 'domain/current_user_uid.dart';

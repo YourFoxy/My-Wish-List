@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wish_list/domain/my_user.dart';
-import 'package:wish_list/screens/adding_gifts.dart';
-import 'package:wish_list/screens/data_filling.dart';
-import 'package:wish_list/screens/editing_profile.dart';
+import 'package:wish_list/domain/user_profile_information.dart';
+import 'package:wish_list/pages/profile_edit_page.dart';
 import 'package:wish_list/services/auth.dart';
 
 class AuthorizationPage extends StatefulWidget {
@@ -220,7 +219,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             textColor: Colors.white,
             fontSize: 16.0);
       } else {
-        AddUserInformation.addUserInformation();
+        UserProfileInformation.addUserInformation();
 
         _emailController.clear();
         _passwordController.clear();

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:wish_list/screens/text_parameters.dart';
+import 'package:wish_list/pages/text_parameters.dart';
 import 'package:wish_list/services/auth.dart';
 
 class PlaceForPictureWidget extends StatefulWidget {
@@ -13,7 +13,7 @@ class PlaceForPictureWidget extends StatefulWidget {
   _PlaceForPictureWidgetState createState() => _PlaceForPictureWidgetState();
 }
 
-File? file;
+File? imageProfileFile;
 
 class _PlaceForPictureWidgetState extends State<PlaceForPictureWidget> {
   File? image;
@@ -27,10 +27,10 @@ class _PlaceForPictureWidgetState extends State<PlaceForPictureWidget> {
           var image =
               await ImagePicker().pickImage(source: ImageSource.gallery);
           if (image == null) return;
-          file = File(image.path);
+          imageProfileFile = File(image.path);
 
           setState(() {
-            this.image = file;
+            this.image = imageProfileFile;
           });
         },
         child: image != null
