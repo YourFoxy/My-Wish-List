@@ -60,11 +60,11 @@ class _SetDataProfileWidgetState extends State<SetDataProfileWidget> {
       imageProfileFile != null
           ? await FirebaseStorage.instance
               .ref()
-              .child("users/${fAuth.currentUser!.uid}")
+              .child("users/${userUid}")
               .putFile(imageProfileFile!)
           : null;
       var str = await FirebaseStorage.instance
-          .ref("users/${fAuth.currentUser!.uid}")
+          .ref("users/${userUid}")
           .getDownloadURL();
 
       UserProfileInformation.updateUserInformation(str);

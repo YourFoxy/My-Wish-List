@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 import 'package:wish_list/pages/auth.dart';
+import 'package:wish_list/pages/friends.dart';
 import 'package:wish_list/pages/profile_edit_page.dart';
 import 'package:wish_list/pages/text_parameters.dart';
 import 'package:wish_list/pages/user_search_page.dart';
@@ -19,6 +20,7 @@ class HomePageWidgets extends StatefulWidget {
   _HomePageWidgetsState createState() => _HomePageWidgetsState();
 }
 
+String userUid = fAuth.currentUser!.uid;
 int r = 0;
 late String categoryUid;
 //CollectionReference myR =
@@ -58,38 +60,58 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
       child: BottomAppBar(
         color: Theme.of(context).primaryColor,
         shape: CircularNotchedRectangle(),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SetDataProfileWidget()),
-                  );
-                },
-                icon: Icon(Icons.edit),
-                color: Colors.white,
+        child: userUid == fAuth.currentUser!.uid
+            ? Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SetDataProfileWidget()),
+                        );
+                      },
+                      icon: Icon(Icons.edit),
+                      color: Colors.white,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const AuthorizationPage()),
+                        );
+                      },
+                      icon: Icon(Icons.exit_to_app),
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              )
+            : Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      onPressed: () {
+                        userUid = fAuth.currentUser!.uid;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomePageWidgets()),
+                        );
+                      },
+                      icon: Icon(Icons.home),
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Expanded(
-              flex: 1,
-              child: IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AuthorizationPage()),
-                  );
-                },
-                icon: Icon(Icons.exit_to_app),
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
       ),
     );
     // BottomNavigationBar(
@@ -124,21 +146,25 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       extendBody: true,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        onPressed: () {
-          showDialog(
-              barrierColor: Colors.black54,
-              context: context,
-              builder: (context) {
-                return const AddingCategoryWidget();
-              });
-        },
-        // AddingCategory().add(context),
-        //AddingCategory(context: context).add(),
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButtonLocation: userUid == fAuth.currentUser!.uid
+          ? FloatingActionButtonLocation.centerDocked
+          : null,
+      floatingActionButton: userUid == fAuth.currentUser!.uid
+          ? FloatingActionButton(
+              backgroundColor: Theme.of(context).primaryColor,
+              onPressed: () {
+                showDialog(
+                    barrierColor: Colors.black54,
+                    context: context,
+                    builder: (context) {
+                      return const AddingCategoryWidget();
+                    });
+              },
+              // AddingCategory().add(context),
+              //AddingCategory(context: context).add(),
+              child: const Icon(Icons.add),
+            )
+          : null,
       bottomNavigationBar: _bottomMenu(),
       body: Column(
         children: const <Widget>[
@@ -232,7 +258,7 @@ class _AddingCategoryWidgetState extends State<AddingCategoryWidget> {
   void add() {
     if (_controller.text != '') {
       FirebaseFirestore.instance
-          .collection(fAuth.currentUser!.uid)
+          .collection(userUid)
           .doc('data')
           .collection('Categories')
           .add({'name of categoty': _controller.text});
@@ -363,10 +389,8 @@ class _PersonalInformationState extends State<_PersonalInformation> {
 
   Widget _buildImage(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-        future: FirebaseFirestore.instance
-            .collection('Users')
-            .doc(fAuth.currentUser!.uid)
-            .get(),
+        future:
+            FirebaseFirestore.instance.collection('Users').doc(userUid).get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const TextParameters(text: '', fontSize: 20.0);
@@ -379,10 +403,8 @@ class _PersonalInformationState extends State<_PersonalInformation> {
 
   Widget _buildName(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-        future: FirebaseFirestore.instance
-            .collection('Users')
-            .doc(fAuth.currentUser!.uid)
-            .get(),
+        future:
+            FirebaseFirestore.instance.collection('Users').doc(userUid).get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const TextParameters(text: '', fontSize: 20.0);
@@ -404,10 +426,8 @@ class _PersonalInformationState extends State<_PersonalInformation> {
 
   Widget _buildAgeAndCity(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-        future: FirebaseFirestore.instance
-            .collection('Users')
-            .doc(fAuth.currentUser!.uid)
-            .get(),
+        future:
+            FirebaseFirestore.instance.collection('Users').doc(userUid).get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const TextParameters(text: '', fontSize: 20.0);
@@ -466,29 +486,38 @@ class _PersonalInformationState extends State<_PersonalInformation> {
           children: <Widget>[
             _userTextInformation(),
             _buildImage(context),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  children: [
-                    SearchOrFriendsButtonWidget(
-                      icon: Icons.search,
-                      func: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => UserSearch()),
-                        );
-                      },
+            userUid == fAuth.currentUser!.uid
+                ? Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        children: [
+                          SearchOrFriendsButtonWidget(
+                            icon: Icons.search,
+                            func: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UserSearch()),
+                              );
+                            },
+                          ),
+                          SearchOrFriendsButtonWidget(
+                            icon: Icons.person,
+                            func: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FriendsPage()),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                    SearchOrFriendsButtonWidget(
-                      icon: Icons.person,
-                      func: () {},
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                  )
+                : SizedBox(),
           ],
         ),
       ),
@@ -547,41 +576,43 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
   }
 
   Widget _removeCategory(Function() buttonRemove) {
-    return Align(
-      alignment: Alignment.topRight,
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: FractionallySizedBox(
-          heightFactor: .2,
-          widthFactor: .2,
-          child: InkWell(
-            onTap: () {
-              buttonRemove();
-              // FirebaseFirestore.instance
-              //     .collection(fAuth.currentUser!.uid)
-              //     .doc('data')
-              //     .collection('Categories')
-              //     .doc(categoryUid)
-              //     .delete();
+    return userUid == fAuth.currentUser!.uid
+        ? Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: FractionallySizedBox(
+                heightFactor: .2,
+                widthFactor: .2,
+                child: InkWell(
+                  onTap: () {
+                    buttonRemove();
+                    // FirebaseFirestore.instance
+                    //     .collection(fAuth.currentUser!.uid)
+                    //     .doc('data')
+                    //     .collection('Categories')
+                    //     .doc(categoryUid)
+                    //     .delete();
 
-              // FirebaseFirestore.instance
-              //     .collection('${fAuth.currentUser!.uid} Gifts')
-              //     .get()
-              //     .then((querySnapshot) {
-              //   querySnapshot.docs.forEach((document) {
-              //     FirebaseFirestore.instance.batch().delete(document.reference);
-              //   });
-              //   return FirebaseFirestore.instance.batch().commit();
-              // });
-            },
-            child: const Icon(
-              Icons.disabled_by_default_outlined,
-              color: Colors.white,
+                    // FirebaseFirestore.instance
+                    //     .collection('${fAuth.currentUser!.uid} Gifts')
+                    //     .get()
+                    //     .then((querySnapshot) {
+                    //   querySnapshot.docs.forEach((document) {
+                    //     FirebaseFirestore.instance.batch().delete(document.reference);
+                    //   });
+                    //   return FirebaseFirestore.instance.batch().commit();
+                    // });
+                  },
+                  child: const Icon(
+                    Icons.disabled_by_default_outlined,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          )
+        : SizedBox();
   }
 
   Widget _designCategory(String str, String id) {
@@ -622,7 +653,7 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
   Widget _category() {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection(fAuth.currentUser!.uid)
+            .collection(userUid)
             .doc('data')
             .collection('Categories')
             .orderBy('name of categoty')

@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:wish_list/pages/home_page.dart';
 import 'package:wish_list/pages/profile_edit_page.dart';
 import 'package:wish_list/services/auth.dart';
 
 class UserProfileInformation {
   static Future<void> addUserInformation() {
-    return FirebaseFirestore.instance
-        .collection('Users')
-        .doc(fAuth.currentUser!.uid)
-        .set({
+    return FirebaseFirestore.instance.collection('Users').doc(userUid).set({
       'userNicknameController': userNicknameController.text,
       'userAgeController': userAgeController.text,
       'userCityController': userCityController.text,
@@ -17,10 +15,7 @@ class UserProfileInformation {
   }
 
   static Future<void> updateUserInformation(String imageUrl) async {
-    return FirebaseFirestore.instance
-        .collection('Users')
-        .doc(fAuth.currentUser!.uid)
-        .update({
+    return FirebaseFirestore.instance.collection('Users').doc(userUid).update({
       'userNicknameController': userNicknameController.text,
       'userAgeController': userAgeController.text,
       'userCityController': userCityController.text,

@@ -53,20 +53,23 @@ class _GiftsPageWidgetState extends State<GiftsPageWidget> {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: const GiftWidget(),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddGiftWidget()),
-          );
-        },
-        //  () {
-        //   AddGift(nameOfGift: 'wwww', description: 'sss').addGift();
-        //   print('add');
-        // },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: userUid == fAuth.currentUser!.uid
+          ? FloatingActionButton(
+              backgroundColor: Theme.of(context).primaryColor,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AddGiftWidget()),
+                );
+              },
+              //  () {
+              //   AddGift(nameOfGift: 'wwww', description: 'sss').addGift();
+              //   print('add');
+              // },
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }
@@ -146,19 +149,21 @@ class _GiftWidgetState extends State<GiftWidget> {
   }
 
   Widget removeContainer(Function() buttonRemove) {
-    return Align(
-      alignment: Alignment.topRight,
-      child: Padding(
-        padding: const EdgeInsets.all(5),
-        child: IconButton(
-          icon: const Icon(Icons.close),
-          color: Colors.white,
-          onPressed: () {
-            buttonRemove();
-          },
-        ),
-      ),
-    );
+    return userUid == fAuth.currentUser!.uid
+        ? Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: const EdgeInsets.all(5),
+              child: IconButton(
+                icon: const Icon(Icons.close),
+                color: Colors.white,
+                onPressed: () {
+                  buttonRemove();
+                },
+              ),
+            ),
+          )
+        : SizedBox();
   }
 
   Widget _giftDescription(String description) {
@@ -233,7 +238,7 @@ class _GiftWidgetState extends State<GiftWidget> {
   Widget showGifts() {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection(fAuth.currentUser!.uid)
+            .collection(userUid)
             .doc('data')
             .collection('Categories')
             .doc(categoryUid)
@@ -269,7 +274,7 @@ class _GiftWidgetState extends State<GiftWidget> {
 
   Future<void> updata(String id, bool isShow) {
     return FirebaseFirestore.instance
-        .collection(fAuth.currentUser!.uid)
+        .collection(userUid)
         .doc('data')
         .collection('Categories')
         .doc(categoryUid)

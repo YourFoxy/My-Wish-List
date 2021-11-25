@@ -7,7 +7,7 @@ class AddGift {
 
   Future<void> addGift(String nameOfGift, String description, String imageUrl) {
     return FirebaseFirestore.instance
-        .collection(fAuth.currentUser!.uid)
+        .collection(userUid)
         .doc('data')
         .collection('Categories')
         .doc(categoryUid)
