@@ -8,8 +8,7 @@ import 'package:wish_list/widgets/place_for_picture.dart';
 import 'package:wish_list/widgets/save_button_widget.dart';
 import 'package:wish_list/widgets/text_field.dart';
 
-final TextEditingController userFirstNameController = TextEditingController();
-final TextEditingController userSecondNameController = TextEditingController();
+final TextEditingController userNicknameController = TextEditingController();
 final TextEditingController userAgeController = TextEditingController();
 final TextEditingController userCityController = TextEditingController();
 
@@ -31,14 +30,8 @@ class _SetDataProfileWidgetState extends State<SetDataProfileWidget> {
         children: <Widget>[
           PlaceForPictureWidget(),
           TextFieldWidget(
-            fieldName: 'first name',
-            controller: userFirstNameController,
-            maxLength: 20,
-            maxLines: 1,
-          ),
-          TextFieldWidget(
-            fieldName: 'second name',
-            controller: userSecondNameController,
+            fieldName: 'nickname',
+            controller: userNicknameController,
             maxLength: 20,
             maxLines: 1,
           ),

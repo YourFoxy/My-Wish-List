@@ -117,13 +117,8 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
-            child: _input(const Icon(Icons.person), 'FIRST NAME',
-                userFirstNameController, false),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: _input(const Icon(Icons.person_outline), 'SECOND NAME',
-                userSecondNameController, false),
+            child: _input(const Icon(Icons.person), 'NICKNAME',
+                userNicknameController, false),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
@@ -223,8 +218,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
 
         _emailController.clear();
         _passwordController.clear();
-        userFirstNameController.clear();
-        userSecondNameController.clear();
+        userNicknameController.clear();
         userAgeController.clear();
         userCityController.clear();
       }

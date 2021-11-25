@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:wish_list/pages/auth.dart';
 import 'package:wish_list/pages/profile_edit_page.dart';
 import 'package:wish_list/pages/text_parameters.dart';
+import 'package:wish_list/pages/user_search_page.dart';
 import 'package:wish_list/services/auth.dart';
+import 'package:wish_list/widgets/search_bar.dart';
+import 'package:wish_list/widgets/search_or_fiends_button.dart';
 
 import 'gifts_page.dart';
 //import 'package:wish_list/services/auth.dart';
@@ -22,52 +25,92 @@ late String categoryUid;
 // FirebaseFirestore.instance.collection(fAuth.currentUser!.uid);
 
 class _HomePageWidgetsState extends State<HomePageWidgets> {
-  List<Widget> _appBarMenuWidget(Color color) {
-    return <Widget>[
-      PopupMenuButton(
-        color: color,
-        itemBuilder: (BuildContext bc) => [
-          const PopupMenuItem(
-              child: Text("Edit profile"), value: "Edit profile"),
-          const PopupMenuItem(child: Text("Exit"), value: "Exit"),
-        ],
-        onSelected: (route) {
-          if (route == 'Edit profile') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SetDataProfileWidget()),
-            );
-          } else if (route == 'Exit') {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const AuthorizationPage()),
-            );
-          }
-        },
-      ),
-    ];
-  }
+  // List<Widget> _appBarMenuWidget(Color color) {
+  //   return <Widget>[
+  //     PopupMenuButton(
+  //       color: color,
+  //       itemBuilder: (BuildContext bc) => [
+  //         const PopupMenuItem(
+  //             child: Text("Edit profile"), value: "Edit profile"),
+  //         const PopupMenuItem(child: Text("Exit"), value: "Exit"),
+  //       ],
+  //       onSelected: (route) {
+  //         if (route == 'Edit profile') {
+  //           Navigator.push(
+  //             context,
+  //             MaterialPageRoute(builder: (context) => SetDataProfileWidget()),
+  //           );
+  //         } else if (route == 'Exit') {
+  //           Navigator.push(
+  //             context,
+  //             MaterialPageRoute(
+  //                 builder: (context) => const AuthorizationPage()),
+  //           );
+  //         }
+  //       },
+  //     ),
+  //   ];
+  // }
 
-  BottomNavigationBar _bottomMenu() {
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: '',
+  Widget _bottomMenu() {
+    return ClipRRect(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+      child: BottomAppBar(
+        color: Theme.of(context).primaryColor,
+        shape: CircularNotchedRectangle(),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SetDataProfileWidget()),
+                  );
+                },
+                icon: Icon(Icons.edit),
+                color: Colors.white,
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AuthorizationPage()),
+                  );
+                },
+                icon: Icon(Icons.exit_to_app),
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
-        // BottomNavigationBarItem(
-        //   icon: Icon(Icons.add_outlined),
-        //   label: 'sss',
-        // ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.menu),
-          label: '',
-        ),
-      ],
-      selectedItemColor: Theme.of(context).primaryColor,
-      onTap: (int i) {},
+      ),
     );
+    // BottomNavigationBar(
+    //   backgroundColor: Theme.of(context).primaryColor,
+    //   items: const <BottomNavigationBarItem>[
+    //     BottomNavigationBarItem(
+    //       icon: Icon(Icons.home),
+    //       label: '',
+    //     ),
+    //     // BottomNavigationBarItem(
+    //     //   icon: Icon(Icons.add_outlined),
+    //     //   label: 'sss',
+    //     // ),
+    //     BottomNavigationBarItem(
+    //       icon: Icon(Icons.menu),
+    //       label: '',
+    //     ),
+    //   ],
+    //   selectedItemColor: Colors.white,
+    //   onTap: (int i) {},
+    // );
   }
 
   @override
@@ -76,9 +119,12 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(''),
-        actions: _appBarMenuWidget(Theme.of(context).primaryColor),
+
+        //actions: _appBarMenuWidget(Theme.of(context).primaryColor),
         backgroundColor: Theme.of(context).primaryColor,
       ),
+      extendBody: true,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         onPressed: () {
@@ -271,7 +317,7 @@ class _PersonalInformationState extends State<_PersonalInformation> {
     return Align(
       alignment: Alignment.topRight,
       child: Padding(
-        padding: const EdgeInsets.only(top: 50, left: 10),
+        padding: const EdgeInsets.all(10.0),
         child: FractionallySizedBox(
           child: CircleAvatar(
             //minRadius: 20,
@@ -284,44 +330,42 @@ class _PersonalInformationState extends State<_PersonalInformation> {
     );
   }
 
-  Widget _searchBar() {
-    return FractionallySizedBox(
-      widthFactor: .64,
-      child: Container(
-        //width: 100,
-        margin: const EdgeInsets.symmetric(
-          vertical: 5.0,
-          horizontal: 10.0,
-        ),
-        padding: const EdgeInsets.symmetric(
-          vertical: 5.0,
-          horizontal: 20.0,
-        ),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        child: TextField(
-          decoration: InputDecoration(
-            hintText: 'Search',
-            icon: Icon(
-              Icons.search,
-              color: Theme.of(context).primaryColor,
-            ),
-            border: InputBorder.none,
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _searchBar() {
+  //   return FractionallySizedBox(
+  //     widthFactor: .64,
+  //     child: Container(
+  //       //width: 100,
+  //       margin: const EdgeInsets.symmetric(
+  //         vertical: 5.0,
+  //         horizontal: 10.0,
+  //       ),
+  //       padding: const EdgeInsets.symmetric(
+  //         vertical: 5.0,
+  //         horizontal: 20.0,
+  //       ),
+  //       decoration: BoxDecoration(
+  //         color: Colors.white,
+  //         borderRadius: BorderRadius.circular(30.0),
+  //       ),
+  //       child: TextField(
+  //         decoration: InputDecoration(
+  //           hintText: 'Search',
+  //           icon: Icon(
+  //             Icons.search,
+  //             color: Theme.of(context).primaryColor,
+  //           ),
+  //           border: InputBorder.none,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildImage(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
         future: FirebaseFirestore.instance
             .collection('Users')
             .doc(fAuth.currentUser!.uid)
-            .collection('profile information')
-            .doc('info')
             .get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -338,17 +382,13 @@ class _PersonalInformationState extends State<_PersonalInformation> {
         future: FirebaseFirestore.instance
             .collection('Users')
             .doc(fAuth.currentUser!.uid)
-            .collection('profile information')
-            .doc('info')
             .get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const TextParameters(text: '', fontSize: 20.0);
           }
           var userDocument = snapshot.data;
-          return _userName('${userDocument?['userFirstNameController']} '
-              ' '
-              '${userDocument?['userSecondNameController']}');
+          return _userName('${userDocument?['userNicknameController']}');
         });
   }
 
@@ -367,16 +407,14 @@ class _PersonalInformationState extends State<_PersonalInformation> {
         future: FirebaseFirestore.instance
             .collection('Users')
             .doc(fAuth.currentUser!.uid)
-            .collection('profile information')
-            .doc('info')
             .get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const TextParameters(text: '', fontSize: 20.0);
           }
           var userDocument = snapshot.data;
-          return _userInfofmation(userDocument?['userAgeController'],
-              userDocument?['userCityController']);
+          return _userInfofmation('Age: ${userDocument?['userAgeController']}',
+              'City: ${userDocument?['userCityController']}');
         });
   }
 
@@ -407,7 +445,7 @@ class _PersonalInformationState extends State<_PersonalInformation> {
         // _userName(),
         //_userInfofmation(age, city),
         _buildAgeAndCity(context),
-        _searchBar(),
+        //  SearchBarWidget(),
         //_userInfofmation(),
       ],
     );
@@ -415,22 +453,44 @@ class _PersonalInformationState extends State<_PersonalInformation> {
 
   Widget _blockWithInformation(String age, String city) {
     return SingleChildScrollView(
-      child: Stack(
-        children: <Widget>[
-          Container(
-            height: 250,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-            ),
-            child: Stack(
-              children: <Widget>[
-                _userTextInformation(),
-                _buildImage(context),
-              ],
-            ),
+      child: Container(
+        height: 250,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          borderRadius: const BorderRadius.vertical(
+            bottom: Radius.circular(30.0),
           ),
-        ],
+        ),
+        child: Stack(
+          children: <Widget>[
+            _userTextInformation(),
+            _buildImage(context),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: [
+                    SearchOrFriendsButtonWidget(
+                      icon: Icons.search,
+                      func: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => UserSearch()),
+                        );
+                      },
+                    ),
+                    SearchOrFriendsButtonWidget(
+                      icon: Icons.person,
+                      func: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -543,6 +603,14 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.0),
               color: Theme.of(context).primaryColor,
+              boxShadow: [
+                BoxShadow(
+                  offset: const Offset(0, 17),
+                  blurRadius: 20,
+                  spreadRadius: -13,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ],
             ),
             child: _nameCategory(str),
           ),

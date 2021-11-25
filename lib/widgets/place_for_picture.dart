@@ -50,8 +50,6 @@ class _PlaceForPictureWidgetState extends State<PlaceForPictureWidget> {
         future: FirebaseFirestore.instance
             .collection('Users')
             .doc(fAuth.currentUser!.uid)
-            .collection('profile information')
-            .doc('info')
             .get(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {

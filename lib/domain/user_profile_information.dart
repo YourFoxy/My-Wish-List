@@ -7,11 +7,8 @@ class UserProfileInformation {
     return FirebaseFirestore.instance
         .collection('Users')
         .doc(fAuth.currentUser!.uid)
-        .collection('profile information')
-        .doc('info')
         .set({
-      'userFirstNameController': userFirstNameController.text,
-      'userSecondNameController': userSecondNameController.text,
+      'userNicknameController': userNicknameController.text,
       'userAgeController': userAgeController.text,
       'userCityController': userCityController.text,
       'userImageUrl':
@@ -23,11 +20,8 @@ class UserProfileInformation {
     return FirebaseFirestore.instance
         .collection('Users')
         .doc(fAuth.currentUser!.uid)
-        .collection('profile information')
-        .doc('info')
         .update({
-      'userFirstNameController': userFirstNameController.text,
-      'userSecondNameController': userSecondNameController.text,
+      'userNicknameController': userNicknameController.text,
       'userAgeController': userAgeController.text,
       'userCityController': userCityController.text,
       'userImageUrl': imageUrl,

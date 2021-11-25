@@ -16,7 +16,12 @@ class SaveButtonWidget extends StatelessWidget {
             alignment: Alignment.center,
             width: double.infinity,
             height: 50,
-            color: Theme.of(context).primaryColor,
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(30.0),
+              ),
+            ),
             child: const TextParameters(
               text: 'SAVE',
               fontSize: 20.0,
