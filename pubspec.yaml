@@ -46,6 +46,8 @@ dependencies:
   shared_preferences_web: ^2.0.2
   image_picker: ^0.8.4+4
   firebase_storage: ^10.1.0
+  video_player: ^2.2.7
+  video_thumbnail: ^0.4.3
 
 dev_dependencies:
   flutter_test:

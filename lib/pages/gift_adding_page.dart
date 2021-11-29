@@ -6,6 +6,7 @@ import 'package:wish_list/domain/user_profile_information.dart';
 import 'package:wish_list/pages/gifts_page.dart';
 import 'package:wish_list/pages/text_parameters.dart';
 import 'package:wish_list/services/auth.dart';
+import 'package:wish_list/widgets/place_fo_media_gift.dart';
 import 'package:wish_list/widgets/place_for_picture.dart';
 import 'package:wish_list/widgets/save_button_widget.dart';
 import 'package:wish_list/widgets/text_field.dart';
@@ -16,20 +17,21 @@ final _descriptionController = TextEditingController();
 class AddGiftWidget extends StatelessWidget {
   const AddGiftWidget({Key? key}) : super(key: key);
   void _addGift(BuildContext context) async {
-    if (imageProfileFile != null &&
+    if (mediaProfileFile != null &&
         _nameController.text != '' &&
         _descriptionController.text != '') {
       await FirebaseStorage.instance
           .ref()
-          .child("user/r/${imageProfileFile!.hashCode}")
-          .putFile(imageProfileFile!);
+          .child("user/r/${mediaProfileFile!.hashCode}")
+          .putFile(mediaProfileFile!);
 
-      var imageUrl = await FirebaseStorage.instance
-          .ref("user/r/${imageProfileFile!.hashCode}")
+      var mediaUrl = await FirebaseStorage.instance
+          .ref("user/r/${mediaProfileFile!.hashCode}")
           .getDownloadURL();
-      AddGift()
-          .addGift(_nameController.text, _descriptionController.text, imageUrl);
-      imageProfileFile = null;
+      AddGift().addGift(
+          _nameController.text, _descriptionController.text, mediaUrl, isImage);
+
+      mediaProfileFile = null;
 
       Navigator.push(
         context,
@@ -117,7 +119,7 @@ class _GiftInformationWidgetState extends State<GiftInformationWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        PlaceForPictureWidget(),
+        PlaceForMediaWidget(),
         const SizedBox(
           height: 20,
         ),

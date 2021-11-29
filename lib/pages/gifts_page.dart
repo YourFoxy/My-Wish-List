@@ -1,13 +1,16 @@
+import 'dart:io';
+
 import 'package:avatar_view/avatar_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wish_list/pages/home_page.dart';
 import 'package:wish_list/pages/text_parameters.dart';
 import 'package:wish_list/services/auth.dart';
 import 'package:wish_list/widgets/open_image.dart';
-
+import 'package:video_player/video_player.dart';
 import 'gift_adding_page.dart';
 
 class GiftsPageWidget extends StatefulWidget {
@@ -17,12 +20,23 @@ class GiftsPageWidget extends StatefulWidget {
   _GiftsPageWidgetState createState() => _GiftsPageWidgetState();
 }
 
+VideoPlayerController? videoController;
 String str = 'sss';
 //CollectionReference myGifts =
 // FirebaseFirestore.instance.collection('${fAuth.currentUser!.uid} Gifts');
-bool b = false;
+////String urlVideo =
+//  'https://firebasestorage.googleapis.com/v0/b/new-wish-list.appspot.com/o/user%2Fr%2F88405785?alt=media&token=c4b998cd-8bca-44db-96e5-3f5a32b13e35';
 
 class _GiftsPageWidgetState extends State<GiftsPageWidget> {
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   videoController = VideoPlayerController.network(urlVideo)
+  //     ..initialize().then((_) {
+  //       setState(() {});
+  //     });
+  // }
+
   AppBar appBar() {
     return AppBar(
       title: const Text(''),
@@ -83,6 +97,7 @@ class GiftWidget extends StatefulWidget {
 }
 
 class _GiftWidgetState extends State<GiftWidget> {
+  var pathImageFromvideo;
   BoxShadow shadow() {
     return BoxShadow(
       offset: const Offset(0, 17),
@@ -111,13 +126,13 @@ class _GiftWidgetState extends State<GiftWidget> {
   //       });
   // }
 
-  Widget _spaceForMedia(String imageUrl) {
+  Widget _spaceForMediaImage(String mediaUrl) {
     var container = SizedBox(
       width: 200,
       child: AvatarView(
         radius: 30.0,
         avatarType: AvatarType.RECTANGLE,
-        imagePath: imageUrl,
+        imagePath: mediaUrl,
         placeHolder: const Icon(
           Icons.circle_outlined,
           size: 50,
@@ -128,6 +143,25 @@ class _GiftWidgetState extends State<GiftWidget> {
           size: 50,
           color: Colors.white,
         ),
+      ),
+    );
+    return FractionallySizedBox(
+      heightFactor: 1,
+      child: container,
+    );
+  }
+
+  Widget _spaceForMediaVideo() {
+    var container = Container(
+      width: 200,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30.0),
+        color: Colors.black26,
+      ),
+      child: Icon(
+        Icons.video_collection_outlined,
+        size: 40,
+        color: Colors.white,
       ),
     );
     return FractionallySizedBox(
@@ -189,7 +223,7 @@ class _GiftWidgetState extends State<GiftWidget> {
   }
 
   Widget gift(Function() removeButton, bool isShow, Function() isShowFunc,
-      String name, String description, String imageUrl) {
+      String name, String description, String mediaUrl, bool isImage) {
     return Column(
       children: [
         Container(
@@ -211,10 +245,23 @@ class _GiftWidgetState extends State<GiftWidget> {
                     Flexible(
                       flex: 1,
                       child: InkWell(
-                        onTap: () {
-                          OpenImage().openImage(context, imageUrl);
+                        onTap: () async {
+                          print('ISSSSSSSS ${isImage}');
+                          if (isImage == false) {
+                            videoController =
+                                VideoPlayerController.network(mediaUrl)
+                                  ..initialize();
+                            setState(() {
+                              // urlVideo = mediaUrl;
+                            });
+                          }
+
+                          OpenImage().openImage(context, mediaUrl, isImage);
                         },
-                        child: _spaceForMedia(imageUrl),
+                        child: isImage
+                            ? _spaceForMediaImage(mediaUrl)
+                            : _spaceForMediaVideo(),
+                        //Icon(Icons.ondemand_video_rounded),
                       ),
                     ),
                     Flexible(
@@ -275,7 +322,8 @@ class _GiftWidgetState extends State<GiftWidget> {
               },
               data['nameOfGift'],
               data['description'],
-              data['imageUrl'],
+              data['mediaUrl'],
+              data['isImage'],
             );
           }).toList());
         });
