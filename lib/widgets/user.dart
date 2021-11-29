@@ -12,12 +12,14 @@ class User extends StatelessWidget {
   String name;
   String urlImage;
   String uid;
+  bool isAdd;
 
   User({
     Key? key,
     required this.name,
     required this.urlImage,
     required this.uid,
+    required this.isAdd,
   }) : super(key: key);
 
   @override
@@ -62,18 +64,28 @@ class User extends StatelessWidget {
                     child: IconButton(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         onPressed: () async {
-                          if (await isDuplicateUniqueName(uid)) {
-                            print('error');
+                          if (isAdd) {
+                            if (await isDuplicateUniqueName(uid)) {
+                              print('error');
+                            } else {
+                              FirebaseFirestore.instance
+                                  .collection(fAuth.currentUser!.uid)
+                                  .doc('data')
+                                  .collection('Friends')
+                                  .doc(uid)
+                                  .set({'friend': uid});
+                            }
                           } else {
                             FirebaseFirestore.instance
                                 .collection(fAuth.currentUser!.uid)
                                 .doc('data')
                                 .collection('Friends')
-                                .add({'friend': uid});
+                                .doc(uid)
+                                .delete();
                           }
                         },
-                        icon: const Icon(
-                          Icons.person_add,
+                        icon: Icon(
+                          isAdd == true ? Icons.person_add : Icons.delete,
                           color: Colors.white,
                         )),
                   )

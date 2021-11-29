@@ -43,9 +43,11 @@ class FriendsPage extends StatelessWidget {
           }
           var userDocument = snapshot.data;
           return User(
-              name: userDocument!['userNicknameController'],
-              urlImage: userDocument['userImageUrl'],
-              uid: uid);
+            name: userDocument!['userNicknameController'],
+            urlImage: userDocument['userImageUrl'],
+            uid: uid,
+            isAdd: false,
+          );
         });
   }
 

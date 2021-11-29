@@ -42,23 +42,29 @@ class _UserSearchState extends State<UserSearch> {
               color: Theme.of(context).primaryColor,
             ));
           }
-          return ListView(
-              shrinkWrap: true,
-              children: snapshot.data!.docs
-                  .where((QueryDocumentSnapshot<Object?> element) =>
-                      element['userNicknameController']
-                          .toString()
-                          .toLowerCase()
-                          .contains('${_searchUser}'.toLowerCase()))
-                  .map((user) {
-                Map<String, dynamic> data = user.data() as Map<String, dynamic>;
+          if (_searchUser.toLowerCase() != '') {
+            return ListView(
+                shrinkWrap: true,
+                children: snapshot.data!.docs
+                    .where((QueryDocumentSnapshot<Object?> element) =>
+                        element['userNicknameController']
+                            .toString()
+                            .toLowerCase()
+                            .contains('${_searchUser}'.toLowerCase()))
+                    .map((user) {
+                  Map<String, dynamic> data =
+                      user.data() as Map<String, dynamic>;
 
-                return User(
-                  name: '${data['userNicknameController']}',
-                  urlImage: '${data['userImageUrl']}',
-                  uid: user.id,
-                );
-              }).toList());
+                  return User(
+                    name: '${data['userNicknameController']}',
+                    urlImage: '${data['userImageUrl']}',
+                    uid: user.id,
+                    isAdd: true,
+                  );
+                }).toList());
+          } else {
+            return SizedBox();
+          }
         });
   }
 

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:wish_list/pages/home_page.dart';
 import 'package:wish_list/pages/text_parameters.dart';
 import 'package:wish_list/services/auth.dart';
+import 'package:wish_list/widgets/open_image.dart';
 
 import 'gift_adding_page.dart';
 
@@ -207,7 +208,15 @@ class _GiftWidgetState extends State<GiftWidget> {
                 ),
                 child: Row(
                   children: <Widget>[
-                    Flexible(flex: 1, child: _spaceForMedia(imageUrl)),
+                    Flexible(
+                      flex: 1,
+                      child: InkWell(
+                        onTap: () {
+                          OpenImage().openImage(context, imageUrl);
+                        },
+                        child: _spaceForMedia(imageUrl),
+                      ),
+                    ),
                     Flexible(
                         flex: 1,
                         child: Stack(
