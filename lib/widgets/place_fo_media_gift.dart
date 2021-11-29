@@ -104,31 +104,35 @@ class _PlaceForMediaWidgetState extends State<PlaceForMediaWidget> {
                 height: 300,
                 fit: BoxFit.cover,
               )
-            : _buildMedia(context),
+            : Icon(
+                Icons.add_photo_alternate,
+                color: Colors.white,
+                size: 50.0,
+              ),
       ),
     );
   }
 
-  Widget _buildMedia(BuildContext context) {
-    return FutureBuilder<DocumentSnapshot>(
-        future: FirebaseFirestore.instance
-            .collection('Users')
-            .doc(fAuth.currentUser!.uid)
-            .get(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const TextParameters(text: '', fontSize: 20.0);
-          }
-          var userDocument = snapshot.data;
-          var type = NetworkImage(userDocument?['userImageUrl']).runtimeType;
-          print('TTTTYYYYYYYYPEEEE ${type}');
-          return Image(
-              image: NetworkImage(userDocument?['userImageUrl']),
-              height: 300,
-              width: double.infinity,
-              fit: BoxFit.cover);
-        });
-  }
+  // Widget _buildMedia(BuildContext context) {
+  //   return FutureBuilder<DocumentSnapshot>(
+  //       future: FirebaseFirestore.instance
+  //           .collection('Users')
+  //           .doc(fAuth.currentUser!.uid)
+  //           .get(),
+  //       builder: (context, snapshot) {
+  //         if (!snapshot.hasData) {
+  //           return const TextParameters(text: '', fontSize: 20.0);
+  //         }
+  //         var userDocument = snapshot.data;
+  //         var type = NetworkImage(userDocument?['userImageUrl']).runtimeType;
+  //         print('TTTTYYYYYYYYPEEEE ${type}');
+  //         return Image(
+  //             image: NetworkImage(userDocument?['userImageUrl']),
+  //             height: 300,
+  //             width: double.infinity,
+  //             fit: BoxFit.cover);
+  //       });
+  // }
 
   @override
   Widget build(BuildContext context) {

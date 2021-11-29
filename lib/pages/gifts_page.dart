@@ -127,8 +127,12 @@ class _GiftWidgetState extends State<GiftWidget> {
   // }
 
   Widget _spaceForMediaImage(String mediaUrl) {
-    var container = SizedBox(
+    var container = Container(
       width: 200,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30.0),
+        color: Colors.black26,
+      ),
       child: AvatarView(
         radius: 30.0,
         avatarType: AvatarType.RECTANGLE,
