@@ -1,0 +1,16 @@
+{
+    "Age": "Возраст",
+    "City": "Город",
+    "SAVE": "CОХРАНИТЬ",
+    "Nickname": "Имя",
+    "Search": "Поиск",
+    "Name": "Название",
+    "Description": "Описание",
+    "CANCEL": "ОТМЕНА",
+    "creating_a_category": "создание категории",
+    "EMAIL": "ПОЧТА",
+    "PASSWORD": "ПАРОЛЬ",
+    "Login": "Войти",
+    "Not_registered_yet_Register": "Ещё не зарегистрировался(-ась)? Регистрируйся!",
+    "Already_registered_Login": "Уже зарегистрирован? Войди!"    
+}

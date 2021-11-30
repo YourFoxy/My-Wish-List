@@ -1,0 +1,16 @@
+{
+    "Age": "Age",
+    "City": "City",
+    "SAVE": "SAVE",
+    "Nickname": "Nickname",
+    "Search": "Search",
+    "Name": "Name",
+    "Description": "Description",
+    "CANCEL": "CANCEL",
+    "creating_a_category": "creating a category",
+    "EMAIL": "EMAIL",
+    "PASSWORD": "PASSWORD",
+    "Login": "Login",
+    "Not_registered_yet_Register": "Not registered yet? Register!",
+    "Already_registered_Login": "Already registered? Login!"    
+}

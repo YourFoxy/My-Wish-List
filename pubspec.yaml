@@ -48,7 +48,7 @@ dependencies:
   firebase_storage: ^10.1.0
   video_player: ^2.2.7
   video_thumbnail: ^0.4.3
-  flutter_easyloading: ^3.0.3
+  easy_localization: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +79,7 @@ flutter:
   assets:
       - images/foxy%.png
       - images/FoxyTask.png
+      - translation/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

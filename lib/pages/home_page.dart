@@ -7,8 +7,11 @@ import 'package:wish_list/pages/profile_edit_page.dart';
 import 'package:wish_list/pages/text_parameters.dart';
 import 'package:wish_list/pages/user_search_page.dart';
 import 'package:wish_list/services/auth.dart';
+import 'package:wish_list/translation/codegen_loader.g.dart';
+import 'package:wish_list/translation/locale_keys.g.dart';
 import 'package:wish_list/widgets/search_bar.dart';
 import 'package:wish_list/widgets/search_or_fiends_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'gifts_page.dart';
 //import 'package:wish_list/services/auth.dart';
@@ -141,8 +144,7 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(''),
-
-        //actions: _appBarMenuWidget(Theme.of(context).primaryColor),
+        actions: <Widget>[],
         backgroundColor: Theme.of(context).primaryColor,
       ),
       extendBody: true,
@@ -433,7 +435,8 @@ class _PersonalInformationState extends State<_PersonalInformation> {
             return const TextParameters(text: '', fontSize: 20.0);
           }
           var userDocument = snapshot.data;
-          return _userInfofmation('Age: ${userDocument?['userAgeController']}',
+          return _userInfofmation(
+              '${LocaleKeys.Age.tr()}: ${userDocument?['userAgeController']}',
               'City: ${userDocument?['userCityController']}');
         });
   }
