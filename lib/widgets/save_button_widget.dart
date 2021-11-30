@@ -11,7 +11,28 @@ class SaveButtonWidget extends StatelessWidget {
       child: Align(
         alignment: Alignment.bottomCenter,
         child: InkWell(
-          onTap: () => func(),
+          onTap: () {
+            showDialog(
+                barrierDismissible: false,
+                barrierColor: Colors.black54,
+                context: context,
+                builder: (context) {
+                  return Center(
+                    child: Stack(
+                      children: [
+                        SizedBox(
+                          height: 80,
+                          width: 80,
+                          child: CircularProgressIndicator(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                });
+            func();
+          },
           child: Container(
             alignment: Alignment.center,
             width: double.infinity,

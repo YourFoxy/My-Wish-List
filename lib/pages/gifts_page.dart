@@ -74,8 +74,7 @@ class _GiftsPageWidgetState extends State<GiftsPageWidget> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => const AddGiftWidget()),
+                  MaterialPageRoute(builder: (context) => AddGiftWidget()),
                 );
               },
               //  () {
@@ -307,9 +306,10 @@ class _GiftWidgetState extends State<GiftWidget> {
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.data == null) {
             return Center(
-                child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor,
-            ));
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ),
+            );
           }
           return ListView(
               children: snapshot.data!.docs.map((gifts) {

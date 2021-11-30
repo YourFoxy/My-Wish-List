@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
+import 'package:wish_list/pages/gifts_page.dart';
 import 'package:wish_list/pages/text_parameters.dart';
 import 'package:wish_list/services/auth.dart';
 
@@ -82,7 +85,14 @@ class _PlaceForMediaWidgetState extends State<PlaceForMediaWidget> {
                                   .pickVideo(source: ImageSource.gallery);
                               if (media == null) return;
                               mediaProfileFile = File(media.path);
+                              // print('FIIIIIILEEEEEE ${media.path}');
+                              videoController =
+                                  VideoPlayerController.network('${media.path}')
+                                    ..initialize();
 
+                              videoController!.play();
+                              videoController?.setVolume(0);
+                              videoController!.setLooping(true);
                               setState(() {
                                 this.media = mediaProfileFile;
                               });
@@ -98,12 +108,17 @@ class _PlaceForMediaWidgetState extends State<PlaceForMediaWidget> {
           );
         },
         child: media != null
-            ? Image.file(
-                media!,
-                width: double.infinity,
-                height: 300,
-                fit: BoxFit.cover,
-              )
+            ? isImage
+                ? Image.file(
+                    media!,
+                    width: double.infinity,
+                    height: 300,
+                    fit: BoxFit.cover,
+                  )
+                : AspectRatio(
+                    aspectRatio: videoController!.value.aspectRatio,
+                    child: VideoPlayer(videoController!),
+                  )
             : Icon(
                 Icons.add_photo_alternate,
                 color: Colors.white,

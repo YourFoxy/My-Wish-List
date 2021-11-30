@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:wish_list/domain/user_gifts.dart';
 import 'package:wish_list/domain/user_profile_information.dart';
 import 'package:wish_list/pages/gifts_page.dart';
+import 'package:wish_list/pages/home_page.dart';
 import 'package:wish_list/pages/text_parameters.dart';
 import 'package:wish_list/services/auth.dart';
 import 'package:wish_list/widgets/place_fo_media_gift.dart';
@@ -15,14 +17,22 @@ import 'package:wish_list/widgets/text_field.dart';
 
 final _nameController = TextEditingController();
 final _descriptionController = TextEditingController();
+bool isLoad = false;
 
-class AddGiftWidget extends StatelessWidget {
-  const AddGiftWidget({Key? key}) : super(key: key);
+class AddGiftWidget extends StatefulWidget {
+  AddGiftWidget({Key? key}) : super(key: key);
+
+  @override
+  _AddGiftWidgetState createState() => _AddGiftWidgetState();
+}
+
+class _AddGiftWidgetState extends State<AddGiftWidget> {
   void _addGift(BuildContext context) async {
     if (mediaProfileFile != null &&
         _nameController.text.toLowerCase() != '' &&
         _descriptionController.text.toLowerCase() != '') {
       // mediaProfileFile ??= File('images/foxy%.png');
+
       await FirebaseStorage.instance
           .ref()
           .child("user/r/${mediaProfileFile!.hashCode}")
@@ -31,11 +41,11 @@ class AddGiftWidget extends StatelessWidget {
       var mediaUrl = await FirebaseStorage.instance
           .ref("user/r/${mediaProfileFile!.hashCode}")
           .getDownloadURL();
+
       AddGift().addGift(
           _nameController.text, _descriptionController.text, mediaUrl, isImage);
 
       mediaProfileFile = null;
-
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => GiftsPageWidget()),
