@@ -1,8 +1,10 @@
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wish_list/domain/my_user.dart';
 import 'package:wish_list/domain/user_profile_information.dart';
+import 'package:wish_list/main.dart';
 import 'package:wish_list/pages/home_page.dart';
 import 'package:wish_list/pages/profile_edit_page.dart';
 import 'package:wish_list/services/auth.dart';
@@ -101,6 +103,8 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           ),
           onPressed: () {
             func();
+
+            setState(() {});
           });
       //onPressed: onPressed)
     }
@@ -169,7 +173,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             child: SizedBox(
               height: 50,
               width: MediaQuery.of(context).size.width,
-              child: _button(label, func),
+              child: _button(label, () => func()),
             ),
           ),
         ],
@@ -217,8 +221,11 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             textColor: Colors.white,
             fontSize: 16.0);
       } else {
-        UserProfileInformation.addUserInformation();
+        UserProfileInformation.addInformation('${userNicknameController.text}',
+            '${userAgeController.text}', '${userCityController.text}');
 
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool('isRu', true);
         _emailController.clear();
         _passwordController.clear();
         userNicknameController.clear();
@@ -236,16 +243,25 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             (showLogin
                 ? Column(
                     children: <Widget>[
-                      _formLog(LocaleKeys.Login.tr(), _loginButtonAction),
+                      _formLog(LocaleKeys.Login.tr(), () {
+                        _loginButtonAction();
+                      }),
                       Padding(
                         padding: const EdgeInsets.all(10),
                         child: GestureDetector(
                           child: Text(
                             LocaleKeys.Not_registered_yet_Register.tr(),
                             style: TextStyle(
-                                fontSize: isRu ? 14 : 20, color: Colors.white),
+                                fontSize: Localizations.localeOf(context)
+                                            .toLanguageTag() ==
+                                        'ru'
+                                    ? 14
+                                    : 20,
+                                color: Colors.white),
                           ),
                           onTap: () {
+                            //  userUid = fAuth.currentUser!.uid;
+
                             setState(() {
                               showLogin = false;
                             });
@@ -264,10 +280,17 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                           child: Text(
                             LocaleKeys.Already_registered_Login.tr(),
                             style: TextStyle(
-                                fontSize: isRu ? 14 : 20, color: Colors.white),
+                                fontSize: Localizations.localeOf(context)
+                                            .toLanguageTag() ==
+                                        'ru'
+                                    ? 14
+                                    : 20,
+                                color: Colors.white),
                           ),
                           onTap: () {
                             setState(() {
+                              // userUid = fAuth.currentUser!.uid;
+
                               showLogin = true;
                               // showLogin = false;
                             });

@@ -1,21 +1,26 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wish_list/domain/my_user.dart';
 import 'package:firebase_core/firebase_core.dart';
 //import 'package:wish_list/services/auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:wish_list/pages/home_page.dart';
 import 'package:wish_list/pages/landing.dart';
 import 'package:wish_list/services/auth.dart';
 import 'package:wish_list/translation/codegen_loader.g.dart';
 
 import 'domain/current_user_uid.dart';
 
+//late bool isRu;
 Future<void> main() async {
+  // isRu = prefs.getBool('isRu')!;
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   // SharedPreferences.setMockInitialValues({});
   runApp(
     EasyLocalization(

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:wish_list/main.dart';
 import 'package:wish_list/pages/auth.dart';
 import 'package:wish_list/pages/friends.dart';
 import 'package:wish_list/pages/profile_edit_page.dart';
@@ -14,6 +15,7 @@ import 'package:wish_list/widgets/search_bar.dart';
 import 'package:wish_list/widgets/search_or_fiends_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'gifts_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:wish_list/services/auth.dart';
 
 class HomePageWidgets extends StatefulWidget {
@@ -23,12 +25,12 @@ class HomePageWidgets extends StatefulWidget {
   _HomePageWidgetsState createState() => _HomePageWidgetsState();
 }
 
-String userUid = fAuth.currentUser!.uid;
+late String userUid = fAuth.currentUser!.uid;
 int r = 0;
 late String categoryUid;
 //CollectionReference myR =
 // FirebaseFirestore.instance.collection(fAuth.currentUser!.uid);
-bool isRu = true;
+//bool isRu = true;
 
 class _HomePageWidgetsState extends State<HomePageWidgets> {
   // List<Widget> _appBarMenuWidget(Color color) {
@@ -70,11 +72,25 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
                   Expanded(
                     flex: 1,
                     child: IconButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+
+                        bool isRu = prefs.getBool('isRu')!;
+                        userNicknameController.text = prefs
+                            .getString('${fAuth.currentUser!.uid} Nickname')!;
+                        // prefs.setString('d', 'd');
+                        userAgeController.text =
+                            prefs.getString('${fAuth.currentUser!.uid} Age')!;
+                        userCityController.text =
+                            prefs.getString('${fAuth.currentUser!.uid} City')!;
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SetDataProfileWidget()),
+                              builder: (context) => SetDataProfileWidget(
+                                    isRu: isRu,
+                                  )),
                         );
                       },
                       icon: Icon(Icons.edit),
@@ -85,6 +101,8 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
                     flex: 1,
                     child: IconButton(
                       onPressed: () {
+                        AuthService().logOut();
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -145,35 +163,9 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(''),
-        actions: <Widget>[
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
-            child: FlutterSwitch(
-              width: 60.0,
-              height: 30.0,
-              valueFontSize: 15.0,
-              toggleSize: 25.0,
-              value: isRu,
-              borderRadius: 20.0,
-              padding: 8.0,
-              activeColor: Colors.white60,
-              inactiveColor: Colors.white60,
-              toggleColor: Theme.of(context).primaryColor,
-              activeTextColor: Theme.of(context).primaryColor,
-              activeText: 'ru',
-              inactiveTextColor: Theme.of(context).primaryColor,
-              inactiveText: 'en',
-              showOnOff: true,
-              onToggle: (val) async {
-                isRu = val;
-                setState(() {});
-                isRu
-                    ? await context.setLocale(Locale('ru'))
-                    : await context.setLocale(Locale('en'));
-              },
-            ),
-          ),
-        ],
+        // actions: <Widget>[
+
+        // ],
         backgroundColor: Theme.of(context).primaryColor,
       ),
       extendBody: true,
@@ -184,6 +176,8 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
           ? FloatingActionButton(
               backgroundColor: Theme.of(context).primaryColor,
               onPressed: () {
+                print(
+                    '........................ ${userUid} ;;; ${fAuth.currentUser!.uid}');
                 showDialog(
                     barrierColor: Colors.black54,
                     context: context,
@@ -241,7 +235,9 @@ class _AddingCategoryWidgetState extends State<AddingCategoryWidget> {
           alignment: Alignment.topCenter,
           child: TextParameters(
             text: LocaleKeys.creating_a_category.tr(),
-            fontSize: isRu ? 25.0 : 30.0,
+            fontSize: Localizations.localeOf(context).toLanguageTag() == 'ru'
+                ? 25.0
+                : 30.0,
           )),
     );
   }
@@ -262,7 +258,9 @@ class _AddingCategoryWidgetState extends State<AddingCategoryWidget> {
           decoration: InputDecoration(
             hintStyle: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: isRu ? 15 : 20,
+              fontSize: Localizations.localeOf(context).toLanguageTag() == 'ru'
+                  ? 15
+                  : 20,
               color: Colors.white30,
             ),
             hintText: LocaleKeys.Name_of_new_category.tr(),
@@ -328,7 +326,9 @@ class _AddingCategoryWidgetState extends State<AddingCategoryWidget> {
         child: FlatButton(
           child: TextParameters(
             text: buttonType,
-            fontSize: isRu ? 15.0 : 20.0,
+            fontSize: Localizations.localeOf(context).toLanguageTag() == 'ru'
+                ? 15.0
+                : 20.0,
           ),
           onPressed: () => buttonFunction(),
         ),

@@ -7,6 +7,7 @@ final FirebaseAuth fAuth = FirebaseAuth.instance;
 late String currentUserUid = '';
 
 class AuthService {
+  //final FirebaseAuth fAuth = FirebaseAuth.instance;
   Future<MyUser?> singInWithEmailAndPassword(
       String email, String password) async {
     try {
