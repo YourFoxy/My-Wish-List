@@ -1,22 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
-import 'package:wish_list/main.dart';
 import 'package:wish_list/pages/auth.dart';
 import 'package:wish_list/pages/friends.dart';
 import 'package:wish_list/pages/profile_edit_page.dart';
 import 'package:wish_list/pages/text_parameters.dart';
 import 'package:wish_list/pages/user_search_page.dart';
 import 'package:wish_list/services/auth.dart';
-import 'package:wish_list/translation/codegen_loader.g.dart';
 import 'package:wish_list/translation/locale_keys.g.dart';
-import 'package:wish_list/widgets/search_bar.dart';
 import 'package:wish_list/widgets/search_or_fiends_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'gifts_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-//import 'package:wish_list/services/auth.dart';
 
 class HomePageWidgets extends StatefulWidget {
   HomePageWidgets({Key? key}) : super(key: key);
@@ -28,38 +23,8 @@ class HomePageWidgets extends StatefulWidget {
 late String userUid = fAuth.currentUser!.uid;
 int r = 0;
 late String categoryUid;
-//CollectionReference myR =
-// FirebaseFirestore.instance.collection(fAuth.currentUser!.uid);
-//bool isRu = true;
 
 class _HomePageWidgetsState extends State<HomePageWidgets> {
-  // List<Widget> _appBarMenuWidget(Color color) {
-  //   return <Widget>[
-  //     PopupMenuButton(
-  //       color: color,
-  //       itemBuilder: (BuildContext bc) => [
-  //         const PopupMenuItem(
-  //             child: Text("Edit profile"), value: "Edit profile"),
-  //         const PopupMenuItem(child: Text("Exit"), value: "Exit"),
-  //       ],
-  //       onSelected: (route) {
-  //         if (route == 'Edit profile') {
-  //           Navigator.push(
-  //             context,
-  //             MaterialPageRoute(builder: (context) => SetDataProfileWidget()),
-  //           );
-  //         } else if (route == 'Exit') {
-  //           Navigator.push(
-  //             context,
-  //             MaterialPageRoute(
-  //                 builder: (context) => const AuthorizationPage()),
-  //           );
-  //         }
-  //       },
-  //     ),
-  //   ];
-  // }
-
   Widget _bottomMenu() {
     return ClipRRect(
       borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
@@ -79,7 +44,6 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
                         bool isRu = prefs.getBool('isRu')!;
                         userNicknameController.text = prefs
                             .getString('${fAuth.currentUser!.uid} Nickname')!;
-                        // prefs.setString('d', 'd');
                         userAgeController.text =
                             prefs.getString('${fAuth.currentUser!.uid} Age')!;
                         userCityController.text =
@@ -136,78 +100,49 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
               ),
       ),
     );
-    // BottomNavigationBar(
-    //   backgroundColor: Theme.of(context).primaryColor,
-    //   items: const <BottomNavigationBarItem>[
-    //     BottomNavigationBarItem(
-    //       icon: Icon(Icons.home),
-    //       label: '',
-    //     ),
-    //     // BottomNavigationBarItem(
-    //     //   icon: Icon(Icons.add_outlined),
-    //     //   label: 'sss',
-    //     // ),
-    //     BottomNavigationBarItem(
-    //       icon: Icon(Icons.menu),
-    //       label: '',
-    //     ),
-    //   ],
-    //   selectedItemColor: Colors.white,
-    //   onTap: (int i) {},
-    // );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text(''),
-        // actions: <Widget>[
-
-        // ],
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      extendBody: true,
-      floatingActionButtonLocation: userUid == fAuth.currentUser!.uid
-          ? FloatingActionButtonLocation.centerDocked
-          : null,
-      floatingActionButton: userUid == fAuth.currentUser!.uid
-          ? FloatingActionButton(
-              backgroundColor: Theme.of(context).primaryColor,
-              onPressed: () {
-                print(
-                    '........................ ${userUid} ;;; ${fAuth.currentUser!.uid}');
-                showDialog(
-                    barrierColor: Colors.black54,
-                    context: context,
-                    builder: (context) {
-                      return const AddingCategoryWidget();
-                    });
-              },
-              // AddingCategory().add(context),
-              //AddingCategory(context: context).add(),
-              child: const Icon(Icons.add),
-            )
-          : null,
-      bottomNavigationBar: _bottomMenu(),
-      body: Column(
-        children: const <Widget>[
-          _PersonalInformation(),
-          CategoryWidget2(),
-        ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const Text(''),
+          backgroundColor: Theme.of(context).primaryColor,
+        ),
+        extendBody: true,
+        floatingActionButtonLocation: userUid == fAuth.currentUser!.uid
+            ? FloatingActionButtonLocation.centerDocked
+            : null,
+        floatingActionButton: userUid == fAuth.currentUser!.uid
+            ? FloatingActionButton(
+                backgroundColor: Theme.of(context).primaryColor,
+                onPressed: () {
+                  showDialog(
+                      barrierColor: Colors.black54,
+                      context: context,
+                      builder: (context) {
+                        return const AddingCategoryWidget();
+                      });
+                },
+                child: const Icon(Icons.add),
+              )
+            : null,
+        bottomNavigationBar: _bottomMenu(),
+        body: Column(
+          children: const <Widget>[
+            _PersonalInformation(),
+            CategoryWidget2(),
+          ],
+        ),
       ),
     );
   }
 }
 
 class AddingCategory {
-  //final BuildContext context;
-
-  // AddingCategory({
-  //   required this.context,
-  // });
-
   void add(BuildContext context) {
     showDialog(
         barrierColor: Colors.black54,
@@ -320,9 +255,7 @@ class _AddingCategoryWidgetState extends State<AddingCategoryWidget> {
 
   Widget _button(String buttonType, Function() buttonFunction) {
     return Flexible(
-      //flex: 1,
       child: Center(
-        // ignore: deprecated_member_use
         child: FlatButton(
           child: TextParameters(
             text: buttonType,
@@ -370,14 +303,12 @@ class _PersonalInformation extends StatefulWidget {
 
 class _PersonalInformationState extends State<_PersonalInformation> {
   Widget _userPicture(String url) {
-    //print('HJGUYGFYTDRTRDYFVJHGIU $url');
     return Align(
       alignment: Alignment.topRight,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: FractionallySizedBox(
           child: CircleAvatar(
-            //minRadius: 20,
             radius: 70,
             backgroundImage: NetworkImage(url),
             backgroundColor: Theme.of(context).primaryColor,
@@ -386,37 +317,6 @@ class _PersonalInformationState extends State<_PersonalInformation> {
       ),
     );
   }
-
-  // Widget _searchBar() {
-  //   return FractionallySizedBox(
-  //     widthFactor: .64,
-  //     child: Container(
-  //       //width: 100,
-  //       margin: const EdgeInsets.symmetric(
-  //         vertical: 5.0,
-  //         horizontal: 10.0,
-  //       ),
-  //       padding: const EdgeInsets.symmetric(
-  //         vertical: 5.0,
-  //         horizontal: 20.0,
-  //       ),
-  //       decoration: BoxDecoration(
-  //         color: Colors.white,
-  //         borderRadius: BorderRadius.circular(30.0),
-  //       ),
-  //       child: TextField(
-  //         decoration: InputDecoration(
-  //           hintText: 'Search',
-  //           icon: Icon(
-  //             Icons.search,
-  //             color: Theme.of(context).primaryColor,
-  //           ),
-  //           border: InputBorder.none,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget _buildImage(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
@@ -427,7 +327,6 @@ class _PersonalInformationState extends State<_PersonalInformation> {
             return const TextParameters(text: '', fontSize: 20.0);
           }
           var userDocument = snapshot.data;
-          print('UUUUUUUUUUUUUUUUU 2 ${userDocument?['userImageUrl']}');
           return _userPicture(userDocument?['userImageUrl']);
         });
   }
@@ -494,11 +393,7 @@ class _PersonalInformationState extends State<_PersonalInformation> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         _buildName(context),
-        // _userName(),
-        //_userInfofmation(age, city),
         _buildAgeAndCity(context),
-        //  SearchBarWidget(),
-        //_userInfofmation(),
       ],
     );
   }
@@ -556,36 +451,12 @@ class _PersonalInformationState extends State<_PersonalInformation> {
     );
   }
 
-  // Widget _blockWithInformation2() {
-  //   return FutureBuilder(
-  //       future: futureSearchResults, builder: (context, dataSnapshot) {
-  //         if(!dataSnapshot.hasData){
-  //           return circularProgress();
-  //         }
-
-  //         //This part is also not working properly
-  //         List<UserResult> searchUserResult = [];
-  //         dataSnapshot.data.docs.forEach((document){
-  //           Users users = Users.fromDocument(document);
-  //           UserResult userResult = UserResult(users);
-  //           searchUserResult.add(userResult);
-  //         });
-  //         return ListView(children: searchUserResult,);
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return _blockWithInformation('df', 'dff');
   }
 }
-// class GetUserInformation {
 
-//   Future<void> addGift() {
-//     String name = FirebaseFirestore.instance
-//             .collection('${fAuth.currentUser!.uid} Profile information').doc('dd').get('dd').toString();
-//   }
-// }
 class CategoryWidget2 extends StatefulWidget {
   const CategoryWidget2({Key? key}) : super(key: key);
 
@@ -619,22 +490,6 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
                 child: InkWell(
                   onTap: () {
                     buttonRemove();
-                    // FirebaseFirestore.instance
-                    //     .collection(fAuth.currentUser!.uid)
-                    //     .doc('data')
-                    //     .collection('Categories')
-                    //     .doc(categoryUid)
-                    //     .delete();
-
-                    // FirebaseFirestore.instance
-                    //     .collection('${fAuth.currentUser!.uid} Gifts')
-                    //     .get()
-                    //     .then((querySnapshot) {
-                    //   querySnapshot.docs.forEach((document) {
-                    //     FirebaseFirestore.instance.batch().delete(document.reference);
-                    //   });
-                    //   return FirebaseFirestore.instance.batch().commit();
-                    // });
                   },
                   child: const Icon(
                     Icons.disabled_by_default_outlined,

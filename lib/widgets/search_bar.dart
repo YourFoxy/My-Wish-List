@@ -36,10 +36,6 @@ class SearchBarWidget extends StatelessWidget {
                   Icons.search,
                   color: Theme.of(context).primaryColor,
                 ),
-                // icon: Icon(
-                //   Icons.search,
-                //   color: Theme.of(context).primaryColor,
-                // ),
                 border: InputBorder.none,
               ),
             ),

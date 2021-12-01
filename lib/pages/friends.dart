@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:wish_list/pages/home_page.dart';
 import 'package:wish_list/pages/text_parameters.dart';
-import 'package:wish_list/services/auth.dart';
-import 'package:wish_list/widgets/search_bar.dart';
 import 'package:wish_list/widgets/user.dart';
 
 class FriendsPage extends StatelessWidget {
@@ -14,7 +12,6 @@ class FriendsPage extends StatelessWidget {
             .collection(userUid)
             .doc('data')
             .collection('Friends')
-            //.where('userNicknameController', isGreaterThanOrEqualTo: 'A').
             .snapshots()
             .asBroadcastStream(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {

@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:wish_list/domain/my_user.dart';
 import 'package:wish_list/pages/auth.dart';
 
-//mport 'package:wish_list/screens2/auth.dart';
-
 import 'home_page.dart';
 
 class LandingPage extends StatelessWidget {

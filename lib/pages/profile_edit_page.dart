@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:wish_list/domain/user_profile_information.dart';
 import 'package:wish_list/pages/home_page.dart';
-import 'package:wish_list/services/auth.dart';
 import 'package:wish_list/translation/locale_keys.g.dart';
 import 'package:wish_list/widgets/place_for_picture.dart';
 import 'package:wish_list/widgets/save_button_widget.dart';
@@ -17,7 +16,6 @@ final TextEditingController userAgeController = TextEditingController();
 final TextEditingController userCityController = TextEditingController();
 
 List dataList = [];
-//late Image media = Image(image: NetworkImage(''));
 late String imageUrl = '';
 
 class SetDataProfileWidget extends StatefulWidget {
@@ -99,7 +97,6 @@ class _SetDataProfileWidgetState extends State<SetDataProfileWidget> {
           ),
         ),
         title: const Text(''),
-        // actions: _appBarMenuWidget(Theme.of(context).primaryColor),
         backgroundColor: Theme.of(context).primaryColor,
         actions: [
           Container(

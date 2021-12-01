@@ -1,14 +1,11 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wish_list/pages/gifts_page.dart';
 import 'package:wish_list/pages/text_parameters.dart';
-import 'package:wish_list/services/auth.dart';
 import 'package:wish_list/translation/locale_keys.g.dart';
 
 class PlaceForMediaWidget extends StatefulWidget {
@@ -87,7 +84,6 @@ class _PlaceForMediaWidgetState extends State<PlaceForMediaWidget> {
                                   .pickVideo(source: ImageSource.gallery);
                               if (media == null) return;
                               mediaProfileFile = File(media.path);
-                              // print('FIIIIIILEEEEEE ${media.path}');
                               videoController =
                                   VideoPlayerController.network('${media.path}')
                                     ..initialize();
@@ -129,27 +125,6 @@ class _PlaceForMediaWidgetState extends State<PlaceForMediaWidget> {
       ),
     );
   }
-
-  // Widget _buildMedia(BuildContext context) {
-  //   return FutureBuilder<DocumentSnapshot>(
-  //       future: FirebaseFirestore.instance
-  //           .collection('Users')
-  //           .doc(fAuth.currentUser!.uid)
-  //           .get(),
-  //       builder: (context, snapshot) {
-  //         if (!snapshot.hasData) {
-  //           return const TextParameters(text: '', fontSize: 20.0);
-  //         }
-  //         var userDocument = snapshot.data;
-  //         var type = NetworkImage(userDocument?['userImageUrl']).runtimeType;
-  //         print('TTTTYYYYYYYYPEEEE ${type}');
-  //         return Image(
-  //             image: NetworkImage(userDocument?['userImageUrl']),
-  //             height: 300,
-  //             width: double.infinity,
-  //             fit: BoxFit.cover);
-  //       });
-  // }
 
   @override
   Widget build(BuildContext context) {

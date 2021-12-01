@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wish_list/pages/home_page.dart';
-import 'package:wish_list/services/auth.dart';
 
 class AddGift {
   final bool isShow = false;

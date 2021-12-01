@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:wish_list/services/auth.dart';
 import 'package:wish_list/widgets/search_bar.dart';
 import 'package:wish_list/widgets/user.dart';
 
@@ -18,7 +17,6 @@ class _UserSearchState extends State<UserSearch> {
   @override
   void initState() {
     super.initState();
-    // Start listening to changes.
     nicknameController.addListener(_handleChange);
   }
 
@@ -32,7 +30,6 @@ class _UserSearchState extends State<UserSearch> {
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('Users')
-            //.where('userNicknameController', isGreaterThanOrEqualTo: 'A').
             .snapshots()
             .asBroadcastStream(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {

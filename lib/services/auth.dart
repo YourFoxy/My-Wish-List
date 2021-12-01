@@ -1,13 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wish_list/domain/current_user_uid.dart';
 import 'package:wish_list/domain/my_user.dart';
 
 final FirebaseAuth fAuth = FirebaseAuth.instance;
 late String currentUserUid = '';
 
 class AuthService {
-  //final FirebaseAuth fAuth = FirebaseAuth.instance;
   Future<MyUser?> singInWithEmailAndPassword(
       String email, String password) async {
     try {

@@ -1,6 +1,5 @@
 import 'package:avatar_view/avatar_view.dart';
 import 'package:flutter/material.dart';
-import 'package:wish_list/pages/profile_edit_page.dart';
 
 class UserPicture extends StatelessWidget {
   String urlImage;

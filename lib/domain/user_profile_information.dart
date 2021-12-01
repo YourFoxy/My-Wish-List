@@ -1,8 +1,4 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:wish_list/main.dart';
-import 'package:wish_list/pages/home_page.dart';
 import 'package:wish_list/pages/profile_edit_page.dart';
 import 'package:wish_list/services/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,18 +16,6 @@ class UserProfileInformation {
           'https://sun9-11.userapi.com/impg/e3GSKLomqW9aEUnCMPqbeYo7LGY22IhfxwRQVA/rnT3cvaOe18.jpg?size=720x900&quality=96&sign=39226f38b88399db41020b178108ca01&type=album',
     });
   }
-
-  // static Future<void> updateUserInformation() {
-  //   return FirebaseFirestore.instance
-  //       .collection('Users')
-  //       .doc(fAuth.currentUser!.uid)
-  //       .update({
-  //     'userNicknameController': userNicknameController.text,
-  //     'userAgeController': userAgeController.text,
-  //     'userCityController': userCityController.text,
-  //     // 'userImageUrl': imageUrl,
-  //   });
-  // }
 
   static void addInformation(String name, String age, String city) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -56,7 +40,6 @@ class UserProfileInformation {
       'userAgeController': userAgeController.text,
       'userCityController': userCityController.text,
     });
-    print('......./ ${imageUrl}');
 
     imageUrl != ''
         ? await FirebaseFirestore.instance
@@ -66,6 +49,5 @@ class UserProfileInformation {
             'userImageUrl': imageUrl,
           })
         : null;
-    //   updateUserInformation();
   }
 }

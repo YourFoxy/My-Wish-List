@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:avatar_view/avatar_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:wish_list/pages/home_page.dart';
@@ -66,7 +63,6 @@ class User extends StatelessWidget {
                         onPressed: () async {
                           if (isAdd) {
                             if (await isDuplicateUniqueName(uid)) {
-                              print('error');
                             } else {
                               FirebaseFirestore.instance
                                   .collection(fAuth.currentUser!.uid)

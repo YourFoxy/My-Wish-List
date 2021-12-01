@@ -1,11 +1,10 @@
+// ignore: implementation_imports
 import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wish_list/domain/my_user.dart';
 import 'package:wish_list/domain/user_profile_information.dart';
-import 'package:wish_list/main.dart';
-import 'package:wish_list/pages/home_page.dart';
 import 'package:wish_list/pages/profile_edit_page.dart';
 import 'package:wish_list/services/auth.dart';
 import 'package:wish_list/translation/locale_keys.g.dart';
@@ -89,7 +88,6 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
     }
 
     Widget _button(String text, Function() func) {
-      // ignore: deprecated_member_use
       return RaisedButton(
           splashColor: Theme.of(context).primaryColor,
           highlightColor: Theme.of(context).primaryColor,
@@ -106,7 +104,6 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
 
             setState(() {});
           });
-      //onPressed: onPressed)
     }
 
     Widget _formRegister(String label, Function() func) {
@@ -193,7 +190,6 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             msg: LocaleKeys.Check_SingIn_email_password.tr(),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
-            //timeInSecForIosWeb: 1,
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
@@ -216,7 +212,6 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             msg: LocaleKeys.Check_Register_email_password,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
-            //timeInSecForIosWeb: 1,
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
@@ -260,8 +255,6 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                                 color: Colors.white),
                           ),
                           onTap: () {
-                            //  userUid = fAuth.currentUser!.uid;
-
                             setState(() {
                               showLogin = false;
                             });
@@ -289,10 +282,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                           ),
                           onTap: () {
                             setState(() {
-                              // userUid = fAuth.currentUser!.uid;
-
                               showLogin = true;
-                              // showLogin = false;
                             });
                           },
                         ),

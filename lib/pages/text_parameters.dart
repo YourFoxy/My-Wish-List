@@ -15,7 +15,6 @@ class TextParameters extends StatelessWidget {
       text,
       style: GoogleFonts.crimsonText(
         color: Colors.white,
-        //textStyle: Theme.of(context).textTheme.headline4,
         fontSize: fontSize,
         fontWeight: FontWeight.w700,
       ),

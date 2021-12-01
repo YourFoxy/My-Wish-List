@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:avatar_view/avatar_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wish_list/pages/home_page.dart';
 import 'package:wish_list/pages/text_parameters.dart';
 import 'package:wish_list/services/auth.dart';
@@ -22,27 +18,13 @@ class GiftsPageWidget extends StatefulWidget {
 
 VideoPlayerController? videoController;
 String str = 'sss';
-//CollectionReference myGifts =
-// FirebaseFirestore.instance.collection('${fAuth.currentUser!.uid} Gifts');
-////String urlVideo =
-//  'https://firebasestorage.googleapis.com/v0/b/new-wish-list.appspot.com/o/user%2Fr%2F88405785?alt=media&token=c4b998cd-8bca-44db-96e5-3f5a32b13e35';
 
 class _GiftsPageWidgetState extends State<GiftsPageWidget> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   videoController = VideoPlayerController.network(urlVideo)
-  //     ..initialize().then((_) {
-  //       setState(() {});
-  //     });
-  // }
-
   AppBar appBar() {
     return AppBar(
       title: const Text(''),
       backgroundColor: Theme.of(context).primaryColor,
       actions: <Widget>[
-        // ignore: deprecated_member_use
         FlatButton(
           onPressed: () {
             Navigator.pop(context);
@@ -77,10 +59,6 @@ class _GiftsPageWidgetState extends State<GiftsPageWidget> {
                   MaterialPageRoute(builder: (context) => AddGiftWidget()),
                 );
               },
-              //  () {
-              //   AddGift(nameOfGift: 'wwww', description: 'sss').addGift();
-              //   print('add');
-              // },
               child: const Icon(Icons.add),
             )
           : null,
@@ -105,25 +83,6 @@ class _GiftWidgetState extends State<GiftWidget> {
       color: Theme.of(context).primaryColor,
     );
   }
-
-  // Widget _buildImage(BuildContext context) {
-  //   return FutureBuilder<DocumentSnapshot>(
-  //       future: FirebaseFirestore.instance
-  //           .collection(fAuth.currentUser!.uid)
-  //           .doc('data')
-  //           .collection('Categories')
-  //           .doc(categoryUid)
-  //           .collection('Gifts')
-  //           .doc('gift')
-  //           .get(),
-  //       builder: (context, snapshot) {
-  //         if (!snapshot.hasData) {
-  //           return const TextParameters(text: '', fontSize: 20.0);
-  //         }
-  //         var userDocument = snapshot.data;
-  //         return _spaceForMedia(userDocument?['imageUrl']);
-  //       });
-  // }
 
   Widget _spaceForMediaImage(String mediaUrl) {
     var container = Container(
@@ -249,14 +208,13 @@ class _GiftWidgetState extends State<GiftWidget> {
                       flex: 1,
                       child: InkWell(
                         onTap: () async {
-                          print('ISSSSSSSS ${isImage}');
                           if (isImage == false) {
                             videoController =
-                                VideoPlayerController.network(mediaUrl)
+                                await VideoPlayerController.network(mediaUrl)
                                   ..initialize();
-                            setState(() {
-                              // urlVideo = mediaUrl;
-                            });
+                            //  videoHeight = videoController!.value.size.height;
+                            //videoController!.play();
+                            setState(() {});
                           }
 
                           OpenImage().openImage(context, mediaUrl, isImage);
@@ -264,7 +222,6 @@ class _GiftWidgetState extends State<GiftWidget> {
                         child: isImage
                             ? _spaceForMediaImage(mediaUrl)
                             : _spaceForMediaVideo(),
-                        //Icon(Icons.ondemand_video_rounded),
                       ),
                     ),
                     Flexible(
@@ -317,7 +274,6 @@ class _GiftWidgetState extends State<GiftWidget> {
 
             return gift(
               () {
-                // FirebaseStorage.instance.ref(data['imageUrl']).delete();
                 gifts.reference.delete();
               },
               data['isShow'],
