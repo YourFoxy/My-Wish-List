@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +9,7 @@ import 'package:video_player/video_player.dart';
 import 'package:wish_list/pages/gifts_page.dart';
 import 'package:wish_list/pages/text_parameters.dart';
 import 'package:wish_list/services/auth.dart';
+import 'package:wish_list/translation/locale_keys.g.dart';
 
 class PlaceForMediaWidget extends StatefulWidget {
   PlaceForMediaWidget({Key? key}) : super(key: key);
@@ -45,8 +47,8 @@ class _PlaceForMediaWidgetState extends State<PlaceForMediaWidget> {
                       Flexible(
                         child: Center(
                           child: FlatButton(
-                            child: const TextParameters(
-                              text: 'Image',
+                            child: TextParameters(
+                              text: LocaleKeys.Image.tr(),
                               fontSize: 20.0,
                             ),
                             onPressed: () async {
@@ -74,8 +76,8 @@ class _PlaceForMediaWidgetState extends State<PlaceForMediaWidget> {
                       Flexible(
                         child: Center(
                           child: FlatButton(
-                            child: const TextParameters(
-                              text: 'Video',
+                            child: TextParameters(
+                              text: LocaleKeys.Video.tr(),
                               fontSize: 20.0,
                             ),
                             onPressed: () async {

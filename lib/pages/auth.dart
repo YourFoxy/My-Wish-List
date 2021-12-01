@@ -1,9 +1,12 @@
+import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:wish_list/domain/my_user.dart';
 import 'package:wish_list/domain/user_profile_information.dart';
+import 'package:wish_list/pages/home_page.dart';
 import 'package:wish_list/pages/profile_edit_page.dart';
 import 'package:wish_list/services/auth.dart';
+import 'package:wish_list/translation/locale_keys.g.dart';
 
 class AuthorizationPage extends StatefulWidget {
   const AuthorizationPage({Key? key}) : super(key: key);
@@ -107,28 +110,28 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(bottom: 20, top: 10),
-            child: _input(
-                const Icon(Icons.email), 'EMAIL', _emailController, false),
+            child: _input(const Icon(Icons.email), LocaleKeys.EMAIL.tr(),
+                _emailController, false),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
-            child: _input(
-                const Icon(Icons.lock), 'PASSWORD', _passwordController, true),
+            child: _input(const Icon(Icons.lock), LocaleKeys.PASSWORD.tr(),
+                _passwordController, true),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
-            child: _input(const Icon(Icons.person), 'NICKNAME',
+            child: _input(const Icon(Icons.person), LocaleKeys.Nickname.tr(),
                 userNicknameController, false),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
-            child: _input(const Icon(Icons.location_city), 'CITY',
+            child: _input(const Icon(Icons.location_city), LocaleKeys.City.tr(),
                 userCityController, false),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
-            child: _input(const Icon(Icons.assignment_ind_sharp), 'AGE',
-                userAgeController, false),
+            child: _input(const Icon(Icons.assignment_ind_sharp),
+                LocaleKeys.Age.tr(), userAgeController, false),
           ),
           const SizedBox(
             height: 20,
@@ -150,13 +153,13 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(bottom: 20, top: 10),
-            child: _input(
-                const Icon(Icons.email), 'EMAIL', _emailController, false),
+            child: _input(const Icon(Icons.email), LocaleKeys.EMAIL.tr(),
+                _emailController, false),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 20),
-            child: _input(
-                const Icon(Icons.lock), 'PASSWORD', _passwordController, true),
+            child: _input(const Icon(Icons.lock), LocaleKeys.PASSWORD.tr(),
+                _passwordController, true),
           ),
           const SizedBox(
             height: 20,
@@ -183,7 +186,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           _email.trim(), _password.trim());
       if (myUser == null) {
         Fluttertoast.showToast(
-            msg: "Can't SignIn you! Please check your email/password",
+            msg: LocaleKeys.Check_SingIn_email_password.tr(),
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             //timeInSecForIosWeb: 1,
@@ -206,7 +209,7 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
           _email.trim(), _password.trim());
       if (myUser == null) {
         Fluttertoast.showToast(
-            msg: "Can't Register you! Please check your email/password",
+            msg: LocaleKeys.Check_Register_email_password,
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             //timeInSecForIosWeb: 1,
@@ -233,13 +236,14 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             (showLogin
                 ? Column(
                     children: <Widget>[
-                      _formLog('Login', _loginButtonAction),
+                      _formLog(LocaleKeys.Login.tr(), _loginButtonAction),
                       Padding(
                         padding: const EdgeInsets.all(10),
                         child: GestureDetector(
-                          child: const Text(
-                            'Not registered yet? Register!',
-                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          child: Text(
+                            LocaleKeys.Not_registered_yet_Register.tr(),
+                            style: TextStyle(
+                                fontSize: isRu ? 14 : 20, color: Colors.white),
                           ),
                           onTap: () {
                             setState(() {
@@ -252,13 +256,15 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                   )
                 : Column(
                     children: <Widget>[
-                      _formRegister('REGISTER', _registerButtonAction),
+                      _formRegister(
+                          LocaleKeys.REGISTER.tr(), _registerButtonAction),
                       Padding(
                         padding: const EdgeInsets.all(10),
                         child: GestureDetector(
-                          child: const Text(
-                            'Already registered? Login!',
-                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          child: Text(
+                            LocaleKeys.Already_registered_Login.tr(),
+                            style: TextStyle(
+                                fontSize: isRu ? 14 : 20, color: Colors.white),
                           ),
                           onTap: () {
                             setState(() {

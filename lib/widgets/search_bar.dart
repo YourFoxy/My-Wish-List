@@ -1,5 +1,7 @@
+import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:wish_list/pages/user_search_page.dart';
+import 'package:wish_list/translation/locale_keys.g.dart';
 
 class SearchBarWidget extends StatelessWidget {
 //  TextEditingController userNicknameController;
@@ -29,7 +31,7 @@ class SearchBarWidget extends StatelessWidget {
             child: TextField(
               controller: nicknameController,
               decoration: InputDecoration(
-                hintText: 'Search',
+                hintText: LocaleKeys.Search.tr(),
                 suffixIcon: Icon(
                   Icons.search,
                   color: Theme.of(context).primaryColor,

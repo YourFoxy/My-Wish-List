@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:wish_list/pages/auth.dart';
 import 'package:wish_list/pages/friends.dart';
 import 'package:wish_list/pages/profile_edit_page.dart';
@@ -12,7 +13,6 @@ import 'package:wish_list/translation/locale_keys.g.dart';
 import 'package:wish_list/widgets/search_bar.dart';
 import 'package:wish_list/widgets/search_or_fiends_button.dart';
 import 'package:easy_localization/easy_localization.dart';
-
 import 'gifts_page.dart';
 //import 'package:wish_list/services/auth.dart';
 
@@ -28,6 +28,7 @@ int r = 0;
 late String categoryUid;
 //CollectionReference myR =
 // FirebaseFirestore.instance.collection(fAuth.currentUser!.uid);
+bool isRu = true;
 
 class _HomePageWidgetsState extends State<HomePageWidgets> {
   // List<Widget> _appBarMenuWidget(Color color) {
@@ -144,7 +145,35 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(''),
-        actions: <Widget>[],
+        actions: <Widget>[
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            child: FlutterSwitch(
+              width: 60.0,
+              height: 30.0,
+              valueFontSize: 15.0,
+              toggleSize: 25.0,
+              value: isRu,
+              borderRadius: 20.0,
+              padding: 8.0,
+              activeColor: Colors.white60,
+              inactiveColor: Colors.white60,
+              toggleColor: Theme.of(context).primaryColor,
+              activeTextColor: Theme.of(context).primaryColor,
+              activeText: 'ru',
+              inactiveTextColor: Theme.of(context).primaryColor,
+              inactiveText: 'en',
+              showOnOff: true,
+              onToggle: (val) async {
+                isRu = val;
+                setState(() {});
+                isRu
+                    ? await context.setLocale(Locale('ru'))
+                    : await context.setLocale(Locale('en'));
+              },
+            ),
+          ),
+        ],
         backgroundColor: Theme.of(context).primaryColor,
       ),
       extendBody: true,
@@ -206,13 +235,13 @@ class _AddingCategoryWidgetState extends State<AddingCategoryWidget> {
   final TextEditingController _controller = TextEditingController();
 
   Widget _actionText() {
-    return const Padding(
+    return Padding(
       padding: EdgeInsets.only(top: 20),
       child: Align(
           alignment: Alignment.topCenter,
           child: TextParameters(
-            text: 'creating a category',
-            fontSize: 30.0,
+            text: LocaleKeys.creating_a_category.tr(),
+            fontSize: isRu ? 25.0 : 30.0,
           )),
     );
   }
@@ -226,17 +255,17 @@ class _AddingCategoryWidgetState extends State<AddingCategoryWidget> {
         child: TextField(
           autofocus: true,
           controller: _controller,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             color: Colors.white,
           ),
           decoration: InputDecoration(
-            hintStyle: const TextStyle(
+            hintStyle: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 20,
+              fontSize: isRu ? 15 : 20,
               color: Colors.white30,
             ),
-            hintText: 'Name of new category',
+            hintText: LocaleKeys.Name_of_new_category.tr(),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30),
               borderSide: const BorderSide(
@@ -276,7 +305,7 @@ class _AddingCategoryWidgetState extends State<AddingCategoryWidget> {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: <Widget>[
-            _button('CANCEL', () {
+            _button(LocaleKeys.CANCEL.tr(), () {
               Navigator.pop(context);
             }),
             Container(
@@ -284,7 +313,7 @@ class _AddingCategoryWidgetState extends State<AddingCategoryWidget> {
               height: 20,
               color: Colors.white,
             ),
-            _button('SAVE', add),
+            _button(LocaleKeys.SAVE.tr(), add),
           ],
         ),
       ),
@@ -299,7 +328,7 @@ class _AddingCategoryWidgetState extends State<AddingCategoryWidget> {
         child: FlatButton(
           child: TextParameters(
             text: buttonType,
-            fontSize: 20.0,
+            fontSize: isRu ? 15.0 : 20.0,
           ),
           onPressed: () => buttonFunction(),
         ),
@@ -437,7 +466,7 @@ class _PersonalInformationState extends State<_PersonalInformation> {
           var userDocument = snapshot.data;
           return _userInfofmation(
               '${LocaleKeys.Age.tr()}: ${userDocument?['userAgeController']}',
-              'City: ${userDocument?['userCityController']}');
+              '${LocaleKeys.City.tr()}: ${userDocument?['userCityController']}');
         });
   }
 

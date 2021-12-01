@@ -1,7 +1,7 @@
 {
     "Age": "Возраст",
     "City": "Город",
-    "SAVE": "CОХРАНИТЬ",
+    "SAVE": "СОХРАНИТЬ",
     "Nickname": "Имя",
     "Search": "Поиск",
     "Name": "Название",
@@ -12,5 +12,12 @@
     "PASSWORD": "ПАРОЛЬ",
     "Login": "Войти",
     "Not_registered_yet_Register": "Ещё не зарегистрировался(-ась)? Регистрируйся!",
-    "Already_registered_Login": "Уже зарегистрирован? Войди!"    
+    "Already_registered_Login": "Уже зарегистрирован? Войди!",
+    "Name_of_new_category": "Название новой категории",
+    "Image": "Картинка",
+    "Video": "Видео",
+    "REGISTER": "Зарегистрироваться",
+    "Check_SingIn_email_password": "Вы не можете войти! Проверьте свою почту/пароль",
+    "Check_Register_email_password": "Вы не можете зарегистрироваться! Проверьте свою почту/пароль"
+        
 }

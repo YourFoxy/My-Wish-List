@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:isolate';
 
+import 'package:easy_localization/src/public_ext.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +11,7 @@ import 'package:wish_list/pages/gifts_page.dart';
 import 'package:wish_list/pages/home_page.dart';
 import 'package:wish_list/pages/text_parameters.dart';
 import 'package:wish_list/services/auth.dart';
+import 'package:wish_list/translation/locale_keys.g.dart';
 import 'package:wish_list/widgets/place_fo_media_gift.dart';
 import 'package:wish_list/widgets/place_for_picture.dart';
 import 'package:wish_list/widgets/save_button_widget.dart';
@@ -148,13 +150,13 @@ class _GiftInformationWidgetState extends State<GiftInformationWidget> {
           height: 20,
         ),
         TextFieldWidget(
-          fieldName: 'Name',
+          fieldName: LocaleKeys.Name.tr(),
           controller: _nameController,
           maxLength: 20,
           maxLines: 1,
         ),
         TextFieldWidget(
-          fieldName: 'Description',
+          fieldName: LocaleKeys.Description.tr(),
           controller: _descriptionController,
           maxLength: 150,
           maxLines: 2,

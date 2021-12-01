@@ -12,5 +12,11 @@
     "PASSWORD": "PASSWORD",
     "Login": "Login",
     "Not_registered_yet_Register": "Not registered yet? Register!",
-    "Already_registered_Login": "Already registered? Login!"    
+    "Already_registered_Login": "Already registered? Login!",   
+    "Name_of_new_category": "Name of new category",
+    "Image": "Image",
+    "Video": "Video",
+    "REGISTER": "REGISTER",   
+    "Check_SingIn_email_password": "Can't SignIn you! Please check your email/password",
+    "Check_Register_email_password": "Can't Register you! Please check your email/password"
 }

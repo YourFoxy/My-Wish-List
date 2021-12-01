@@ -1,5 +1,7 @@
+import 'package:easy_localization/src/public_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:wish_list/pages/text_parameters.dart';
+import 'package:wish_list/translation/locale_keys.g.dart';
 
 class SaveButtonWidget extends StatelessWidget {
   final Function func;
@@ -43,8 +45,8 @@ class SaveButtonWidget extends StatelessWidget {
                 top: Radius.circular(30.0),
               ),
             ),
-            child: const TextParameters(
-              text: 'SAVE',
+            child: TextParameters(
+              text: LocaleKeys.SAVE.tr(),
               fontSize: 20.0,
             ),
           ),
