@@ -99,6 +99,24 @@ class GiftInformationWidget extends StatefulWidget {
 }
 
 class _GiftInformationWidgetState extends State<GiftInformationWidget> {
+  Widget _nameField() {
+    return TextFieldWidget(
+      fieldName: LocaleKeys.Name.tr(),
+      controller: giftNameController,
+      maxLength: 20,
+      maxLines: 1,
+    );
+  }
+
+  Widget _descriptionField() {
+    return TextFieldWidget(
+      fieldName: LocaleKeys.Description.tr(),
+      controller: giftDescriptionController,
+      maxLength: 150,
+      maxLines: 2,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -107,18 +125,8 @@ class _GiftInformationWidgetState extends State<GiftInformationWidget> {
         const SizedBox(
           height: 20,
         ),
-        TextFieldWidget(
-          fieldName: LocaleKeys.Name.tr(),
-          controller: giftNameController,
-          maxLength: 20,
-          maxLines: 1,
-        ),
-        TextFieldWidget(
-          fieldName: LocaleKeys.Description.tr(),
-          controller: giftDescriptionController,
-          maxLength: 150,
-          maxLines: 2,
-        ),
+        _nameField(),
+        _descriptionField(),
         const SizedBox(
           height: 50,
         )

@@ -11,6 +11,8 @@ import 'package:wish_list/services/auth.dart';
 import 'package:wish_list/translation/locale_keys.g.dart';
 import 'package:wish_list/widgets/search_or_fiends_button.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:wish_list/widgets/user_age_and_city_profile.dart';
+import 'package:wish_list/widgets/user_name_profile.dart';
 import 'package:wish_list/widgets/user_picture_profile.dart';
 import 'gifts_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -304,98 +306,12 @@ class _PersonalInformation extends StatefulWidget {
 }
 
 class _PersonalInformationState extends State<_PersonalInformation> {
-  Widget _userPicture(String url) {
-    return Align(
-      alignment: Alignment.topRight,
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: FractionallySizedBox(
-          child: CircleAvatar(
-            radius: 70,
-            backgroundImage: NetworkImage(url),
-            backgroundColor: Theme.of(context).primaryColor,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildImage(BuildContext context) {
-    return FutureBuilder<DocumentSnapshot>(
-        future:
-            FirebaseFirestore.instance.collection('Users').doc(userUid).get(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const TextParameters(text: '', fontSize: 20.0);
-          }
-          var userDocument = snapshot.data;
-          return _userPicture(userDocument?['userImageUrl']);
-        });
-  }
-
-  Widget _buildName(BuildContext context) {
-    return FutureBuilder<DocumentSnapshot>(
-        future:
-            FirebaseFirestore.instance.collection('Users').doc(userUid).get(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const TextParameters(text: '', fontSize: 20.0);
-          }
-          var userDocument = snapshot.data;
-          return _userName('${userDocument?['userNicknameController']}');
-        });
-  }
-
-  Widget _userName(String str) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: TextParameters(
-        text: str,
-        fontSize: 30.0,
-      ),
-    );
-  }
-
-  Widget _buildAgeAndCity(BuildContext context) {
-    return FutureBuilder<DocumentSnapshot>(
-        future:
-            FirebaseFirestore.instance.collection('Users').doc(userUid).get(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const TextParameters(text: '', fontSize: 20.0);
-          }
-          var userDocument = snapshot.data;
-          return _userInfofmation(
-              '${LocaleKeys.Age.tr()}: ${userDocument?['userAgeController']}',
-              '${LocaleKeys.City.tr()}: ${userDocument?['userCityController']}');
-        });
-  }
-
-  Widget _userInfofmation(String age, String city) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextParameters(
-            text: age,
-            fontSize: 20.0,
-          ),
-          TextParameters(
-            text: city,
-            fontSize: 20.0,
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _userTextInformation() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        _buildName(context),
-        _buildAgeAndCity(context),
+      children: const <Widget>[
+        UserProfileNameWidget(),
+        UserProfileAgeAndCity(),
       ],
     );
   }
@@ -414,7 +330,7 @@ class _PersonalInformationState extends State<_PersonalInformation> {
         child: Stack(
           children: <Widget>[
             _userTextInformation(),
-            UserProfilePicture(),
+            UserProfilePictureWidget(),
             // _buildImage(context),
             userUid == fAuth.currentUser!.uid
                 ? Align(

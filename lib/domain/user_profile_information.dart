@@ -50,4 +50,15 @@ class UserProfileInformation {
           })
         : null;
   }
+
+  static void setControllers() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    bool isRu = prefs.getBool('isRu')!;
+    userNicknameController.text =
+        prefs.getString('${fAuth.currentUser!.uid} Nickname')!;
+    userAgeController.text = prefs.getString('${fAuth.currentUser!.uid} Age')!;
+    userCityController.text =
+        prefs.getString('${fAuth.currentUser!.uid} City')!;
+  }
 }
