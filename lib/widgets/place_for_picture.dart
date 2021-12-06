@@ -16,6 +16,16 @@ class PlaceForPictureWidget extends StatefulWidget {
 File? imageProfileFile;
 
 class _PlaceForPictureWidgetState extends State<PlaceForPictureWidget> {
+  void _getImage() async {
+    var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null) return;
+    imageProfileFile = File(image.path);
+
+    setState(() {
+      this.image = imageProfileFile;
+    });
+  }
+
   File? image;
   Widget _picture() {
     return Container(
@@ -23,15 +33,8 @@ class _PlaceForPictureWidgetState extends State<PlaceForPictureWidget> {
       width: double.infinity,
       color: Theme.of(context).primaryColor,
       child: InkWell(
-        onTap: () async {
-          var image =
-              await ImagePicker().pickImage(source: ImageSource.gallery);
-          if (image == null) return;
-          imageProfileFile = File(image.path);
-
-          setState(() {
-            this.image = imageProfileFile;
-          });
+        onTap: () {
+          _getImage();
         },
         child: image != null
             ? Image.file(

@@ -29,6 +29,7 @@ class SearchBarWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(20.0),
             ),
             child: TextField(
+              style: TextStyle(color: Theme.of(context).primaryColor),
               controller: nicknameController,
               decoration: InputDecoration(
                 hintText: LocaleKeys.Search.tr(),

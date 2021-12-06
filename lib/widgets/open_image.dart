@@ -53,12 +53,9 @@ class _DialorForMediaState extends State<DialorForMedia> {
   Widget _placeForVideo() {
     return InkWell(
       onTap: () {
-        print('............ ${videoController?.value.size.height}');
-
         videoController!.value.isPlaying
             ? videoController!.pause()
             : videoController!.play();
-        // videoHeight = videoController!.value.size.height;
         setState(() {});
       },
       child: AspectRatio(

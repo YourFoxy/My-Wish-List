@@ -8,8 +8,8 @@ import 'package:wish_list/widgets/place_fo_media_gift.dart';
 import 'package:wish_list/widgets/save_button_widget.dart';
 import 'package:wish_list/widgets/text_field.dart';
 
-final _nameController = TextEditingController();
-final _descriptionController = TextEditingController();
+final giftNameController = TextEditingController();
+final giftDescriptionController = TextEditingController();
 bool isLoad = false;
 
 class AddGiftWidget extends StatefulWidget {
@@ -20,10 +20,10 @@ class AddGiftWidget extends StatefulWidget {
 }
 
 class _AddGiftWidgetState extends State<AddGiftWidget> {
-  void _addGift(BuildContext context) async {
+  Future<void> _addGift(BuildContext context) async {
     if (mediaProfileFile != null &&
-        _nameController.text.toLowerCase() != '' &&
-        _descriptionController.text.toLowerCase() != '') {
+        giftNameController.text.toLowerCase() != '' &&
+        giftDescriptionController.text.toLowerCase() != '') {
       await FirebaseStorage.instance
           .ref()
           .child("user/r/${mediaProfileFile!.hashCode}")
@@ -33,8 +33,8 @@ class _AddGiftWidgetState extends State<AddGiftWidget> {
           .ref("user/r/${mediaProfileFile!.hashCode}")
           .getDownloadURL();
 
-      AddGift().addGift(
-          _nameController.text, _descriptionController.text, mediaUrl, isImage);
+      AddGift().addGift(giftNameController.text, giftDescriptionController.text,
+          mediaUrl, isImage);
 
       mediaProfileFile = null;
       Navigator.push(
@@ -42,12 +42,12 @@ class _AddGiftWidgetState extends State<AddGiftWidget> {
         MaterialPageRoute(builder: (context) => GiftsPageWidget()),
       );
     } else if (mediaProfileFile == null &&
-        _nameController.text.toLowerCase() != '' &&
-        _descriptionController.text.toLowerCase() != '') {
+        giftNameController.text.toLowerCase() != '' &&
+        giftDescriptionController.text.toLowerCase() != '') {
       var mediaUrl = 'images/FoxyTask.png';
 
-      AddGift().addGift(
-          _nameController.text, _descriptionController.text, mediaUrl, isImage);
+      AddGift().addGift(giftNameController.text, giftDescriptionController.text,
+          mediaUrl, isImage);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => GiftsPageWidget()),
@@ -77,8 +77,11 @@ class _AddGiftWidgetState extends State<AddGiftWidget> {
           ),
           SafeArea(
             child: SaveButtonWidget(
-              func: () {
-                _addGift(context);
+              func: () async {
+                await _addGift(context);
+
+                giftNameController.clear();
+                giftDescriptionController.clear();
               },
             ),
           ),
@@ -106,13 +109,13 @@ class _GiftInformationWidgetState extends State<GiftInformationWidget> {
         ),
         TextFieldWidget(
           fieldName: LocaleKeys.Name.tr(),
-          controller: _nameController,
+          controller: giftNameController,
           maxLength: 20,
           maxLines: 1,
         ),
         TextFieldWidget(
           fieldName: LocaleKeys.Description.tr(),
-          controller: _descriptionController,
+          controller: giftDescriptionController,
           maxLength: 150,
           maxLines: 2,
         ),

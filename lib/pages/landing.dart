@@ -14,6 +14,6 @@ class LandingPage extends StatelessWidget {
     final MyUser? myUser = Provider.of<MyUser?>(context);
     final bool isLoggedIn = myUser != null;
 
-    return isLoggedIn ? HomePageWidgets() : AuthorizationPage();
+    return isLoggedIn ? HomePageWidgets() : const AuthorizationPage();
   }
 }

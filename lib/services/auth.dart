@@ -12,6 +12,7 @@ class AuthService {
           email: email, password: password);
 
       User? user = result.user;
+
       return MyUser.fromFirebase(user!);
     } catch (e) {
       return null;
@@ -32,7 +33,8 @@ class AuthService {
   }
 
   Future logOut() async {
-    await fAuth.signOut();
+    await FirebaseAuth.instance.signOut();
+    //await fAuth.signOut();
   }
 
   Stream<MyUser?> get currentUser {

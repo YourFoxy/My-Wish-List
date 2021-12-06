@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wish_list/pages/auth.dart';
 import 'package:wish_list/pages/friends.dart';
 import 'package:wish_list/pages/profile_edit_page.dart';
@@ -10,6 +11,7 @@ import 'package:wish_list/services/auth.dart';
 import 'package:wish_list/translation/locale_keys.g.dart';
 import 'package:wish_list/widgets/search_or_fiends_button.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:wish_list/widgets/user_picture_profile.dart';
 import 'gifts_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -65,13 +67,13 @@ class _HomePageWidgetsState extends State<HomePageWidgets> {
                     flex: 1,
                     child: IconButton(
                       onPressed: () {
-                        AuthService().logOut();
+                        @override
+                        void dispose() {
+                          nicknameController.dispose();
+                          super.dispose();
+                        }
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const AuthorizationPage()),
-                        );
+                        AuthService().logOut();
                       },
                       icon: Icon(Icons.exit_to_app),
                       color: Colors.white,
@@ -412,7 +414,8 @@ class _PersonalInformationState extends State<_PersonalInformation> {
         child: Stack(
           children: <Widget>[
             _userTextInformation(),
-            _buildImage(context),
+            UserProfilePicture(),
+            // _buildImage(context),
             userUid == fAuth.currentUser!.uid
                 ? Align(
                     alignment: Alignment.bottomLeft,
@@ -499,7 +502,7 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
               ),
             ),
           )
-        : SizedBox();
+        : const SizedBox();
   }
 
   Widget _designCategory(String str, String id) {
@@ -562,6 +565,18 @@ class _CategoryWidget2State extends State<CategoryWidget2> {
                       _designCategory(my['name of categoty'], my.id),
                       _removeCategory(() {
                         my.reference.delete();
+                        FirebaseFirestore.instance
+                            .collection(userUid)
+                            .doc('data')
+                            .collection('Categories')
+                            .doc(my.id)
+                            .collection('Gifts')
+                            .get()
+                            .then((snapshot) {
+                          for (DocumentSnapshot ds in snapshot.docs) {
+                            ds.reference.delete();
+                          }
+                        });
                       }),
                     ]),
                   );

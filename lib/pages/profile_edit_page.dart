@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:wish_list/domain/user_profile_information.dart';
 import 'package:wish_list/pages/home_page.dart';
+import 'package:wish_list/pages/user_search_page.dart';
 import 'package:wish_list/translation/locale_keys.g.dart';
 import 'package:wish_list/widgets/place_for_picture.dart';
 import 'package:wish_list/widgets/save_button_widget.dart';
@@ -29,6 +30,24 @@ class SetDataProfileWidget extends StatefulWidget {
 
 class _SetDataProfileWidgetState extends State<SetDataProfileWidget> {
   bool isRu;
+  String _nick = '';
+  String _age = '';
+  String _city = '';
+  String _searchUser = '';
+  @override
+  void initState() {
+    super.initState();
+    userNicknameController.addListener(_handleChange);
+  }
+
+  void _handleChange() {
+    setState(() {
+      _nick = userNicknameController.text;
+      _age = userAgeController.text;
+      _city = userCityController.text;
+    });
+  }
+
   _SetDataProfileWidgetState({required this.isRu});
   Widget _profileInfoEdit() {
     return SingleChildScrollView(
@@ -62,27 +81,39 @@ class _SetDataProfileWidgetState extends State<SetDataProfileWidget> {
   }
 
   Widget _saveData() {
-    return SaveButtonWidget(func: () async {
-      var str = '';
-      if (imageProfileFile != null) {
-        await FirebaseStorage.instance
-            .ref()
-            .child("users/${userUid}")
-            .putFile(imageProfileFile!);
-        str = await FirebaseStorage.instance
-            .ref("users/${userUid}")
-            .getDownloadURL();
-      }
-
-      UserProfileInformation.updateInformation('${userNicknameController.text}',
-          '${userAgeController.text}', '${userCityController.text}', str);
-      imageProfileFile = null;
-      str = '';
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePageWidgets()),
-      );
-    });
+    return SaveButtonWidget(
+      func: () async {
+        // if (_nick != '' &&
+        //     _nick != ' '.toLowerCase() &&
+        //     _age != '' &&
+        //     _age != ' '.toLowerCase() &&
+        //     _city != '' &&
+        //     _city != ' '.toLowerCase()) {
+        var str = '';
+        if (imageProfileFile != null) {
+          await FirebaseStorage.instance
+              .ref()
+              .child("users/${userUid}")
+              .putFile(imageProfileFile!);
+          str = await FirebaseStorage.instance
+              .ref("users/${userUid}")
+              .getDownloadURL();
+        }
+        UserProfileInformation.updateInformation(
+            '${userNicknameController.text}',
+            '${userAgeController.text}',
+            '${userCityController.text}',
+            str);
+        imageProfileFile = null;
+        str = '';
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePageWidgets()),
+        );
+        //}
+        true;
+      },
+    );
   }
 
   @override
